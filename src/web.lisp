@@ -27,7 +27,17 @@
   (render #P"index.html"))
 
 (defroute "/home" ()
-  (render #P "home.html"))
+  (render #P "static_pages/home.html"))
+
+(defroute "/help" ()
+  (render #P "static_pages/help.html"))
+
+(defroute "/about" ()
+  (render #P "static_pages/about.html"))
+
+(defroute "/users/new" ()
+  (render #P "users/new.html"))
+
 ;;
 ;; Error pages
 
