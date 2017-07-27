@@ -22,6 +22,7 @@
 
                ;; for DB
                :sxql
+               :datafly
                :mito)
   :components ((:module "src"
                 :components
