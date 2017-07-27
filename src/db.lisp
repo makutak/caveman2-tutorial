@@ -3,7 +3,7 @@
   (:use :cl)
   (:import-from :caveman2-tutorial.config
                 :config)
-  (:import-from :datafly
+  (:import-from :mito
                 :*connection*)
   (:import-from :cl-dbi
                 :connect-cached)

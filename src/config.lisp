@@ -20,7 +20,7 @@
 (defparameter *template-directory* (merge-pathnames #P"templates/" *application-root*))
 
 (defconfig :common
-  `(:databases ((:maindb :sqlite3 :database-name ":memory:"))))
+  `(:databases ((:maindb :sqlite3 :database-name #P"db/common.sqlite3"))))
 
 (defconfig |development|
   '())

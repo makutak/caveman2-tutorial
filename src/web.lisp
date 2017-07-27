@@ -5,7 +5,7 @@
         :caveman2-tutorial.config
         :caveman2-tutorial.view
         :caveman2-tutorial.db
-        :datafly
+        :mito
         :sxql)
   (:export :*web*))
 (in-package :caveman2-tutorial.web)
