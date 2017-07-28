@@ -26,7 +26,7 @@
                :mito)
   :components ((:module "src"
                 :components
-                ((:file "main" :depends-on ("config" "view" "db"))
+                ((:file "main" :depends-on ("config" "view" "db" "model"))
                  (:file "web" :depends-on ("view"))
                  (:file "view" :depends-on ("config"))
                  (:file "db" :depends-on ("config"))

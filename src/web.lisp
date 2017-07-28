@@ -5,6 +5,7 @@
         :caveman2-tutorial.config
         :caveman2-tutorial.view
         :caveman2-tutorial.db
+        :caveman2-tutorial.model.user
         :mito
         :sxql)
   (:export :*web*))
@@ -37,6 +38,10 @@
 
 (defroute "/users/new" ()
   (render #P "users/new.html"))
+
+(defroute "/find-user" ()
+  (setf u (find-user))
+  (format nil "user-name: ~A<br>user-email: ~A" (user-name u) (user-email u)))
 
 ;;
 ;; Error pages

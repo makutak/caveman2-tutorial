@@ -3,7 +3,11 @@
   (:use :cl
         :caveman2-tutorial.db
         :mito
-        :sxql))
+        :sxql)
+
+  (:export :user-name
+           :user-email
+           :find-user))
 (in-package :caveman2-tutorial.model.user)
 
 (defclass user ()
@@ -14,3 +18,7 @@
           :initarg :email
           :accessor user-email))
   (:metaclass mito:dao-table-class))
+
+(defun find-user ()
+  (with-connection (db)
+    (mito:find-dao 'user :id 1)))
