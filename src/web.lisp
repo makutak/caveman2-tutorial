@@ -39,10 +39,13 @@
 (defroute "/users/new" ()
   (render #P "users/new.html"))
 
-(defroute "/find-user" ()
-  (setf u (find-user))
-  (format nil "user-name: ~A<br>user-email: ~A" (user-name u) (user-email u)))
+(defroute "/api/users" ()
+  (setf users (find-users))
+  (render-json users))
 
+(defroute "/api/user/:id" (&key id)
+  (setf user (find-user id))
+  (render-json user))
 ;;
 ;; Error pages
 

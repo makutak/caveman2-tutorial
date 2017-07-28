@@ -7,7 +7,8 @@
 
   (:export :user-name
            :user-email
-           :find-user))
+           :find-user
+           :find-users))
 (in-package :caveman2-tutorial.model.user)
 
 (defclass user ()
@@ -19,6 +20,11 @@
           :accessor user-email))
   (:metaclass mito:dao-table-class))
 
-(defun find-user ()
+
+(defun find-user (&key id)
   (with-connection (db)
-    (mito:find-dao 'user :id 1)))
+    (mito:find-dao 'user :id id)))
+
+(defun find-users ()
+  (with-connection (db)
+    (mito:retrieve-dao 'user)))
