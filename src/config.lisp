@@ -20,16 +20,17 @@
 (defparameter *template-directory* (merge-pathnames #P"templates/" *application-root*))
 
 (defconfig :common
-  `(:databases ((:maindb :sqlite3 :database-name #P"db/common.sqlite3"))))
+    `(:debug T
+      :databases ((:maindb :sqlite3 :database-name #P"db/common.sqlite3"))))
 
 (defconfig |development|
-  '())
+    '())
 
 (defconfig |production|
-  '())
+    '())
 
 (defconfig |test|
-  '())
+    '())
 
 (defun config (&optional key)
   (envy:config #.(package-name *package*) key))
