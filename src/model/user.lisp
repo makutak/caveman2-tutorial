@@ -17,7 +17,10 @@
          :accessor user-name)
    (email :col-type (or (:varchar 128) :null)
           :initarg :email
-          :accessor user-email))
+          :accessor user-email)
+   (birth-date :col-type (:datetime)
+               :initargs :birty-date
+               :accessor user-birth-date))
   (:metaclass mito:dao-table-class))
 
 
