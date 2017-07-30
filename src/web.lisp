@@ -25,7 +25,8 @@
 ;; Routing rules
 
 (defroute "/" ()
-  (render #P"index.html"))
+  (render #P"index.html"
+          (list :users (find-users))))
 
 (defroute "/home" ()
   (render #P "static_pages/home.html"))
@@ -46,6 +47,9 @@
 (defroute "/api/user/:id" (&key id)
   (setf user (find-user id))
   (render-json user))
+
+
+
 ;;
 ;; Error pages
 

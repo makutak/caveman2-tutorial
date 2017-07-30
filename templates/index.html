@@ -3,5 +3,14 @@
 {% block content %}
 <div id="main">
   Welcome to <a href="http://8arrow.org/caveman/">Caveman2</a>!
+  <ul>
+    {% for user in users %}
+      <li>
+        {{ user.name }}
+        {{ user.birth-date}}
+      </li>
+    {% endfor %}
+  </ul>
 </div>
+
 {% endblock %}
