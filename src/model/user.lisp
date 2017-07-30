@@ -21,8 +21,11 @@
           :accessor user-email)
    (birth-date :col-type (:datetime)
                :initargs :birty-date
-               :accessor user-birth-date))
-  (:metaclass mito:dao-table-class))
+               :accessor user-birth-date)
+   (password :col-type (or (:varchar 16) :null)
+             :initarg :password))
+  (:metaclass mito:dao-table-class)
+  (:unique-key name email))
 
 
 (defun find-user (id)
