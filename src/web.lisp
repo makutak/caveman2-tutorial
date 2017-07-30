@@ -40,6 +40,10 @@
 (defroute "/users/new" ()
   (render #P "users/new.html"))
 
+(defroute "/users/:id" (&key id)
+  (render #P"users/show.html"
+          (list :user (find-user id))))
+
 (defroute "/api/users" ()
   (setf users (find-users))
   (render-json users))

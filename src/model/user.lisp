@@ -3,8 +3,8 @@
   (:use :cl
         :caveman2-tutorial.db
         :mito
-        :sxql)
-
+        :sxql
+        :local-time)
   (:export :user-name
            :user-email
            :user-birth-date
@@ -16,13 +16,13 @@
   ((name :col-type (:varchar 64)
          :initarg :name
          :accessor user-name)
-   (email :col-type (or (:varchar 128) :null)
+   (email :col-type (:varchar 128)
           :initarg :email
           :accessor user-email)
    (birth-date :col-type (:datetime)
                :initargs :birty-date
                :accessor user-birth-date)
-   (password :col-type (or (:varchar 16) :null)
+   (password :col-type (:varchar 16)
              :initarg :password))
   (:metaclass mito:dao-table-class)
   (:unique-key name email))
