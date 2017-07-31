@@ -5,11 +5,20 @@
         :mito
         :sxql
         :local-time)
+  (:import-from :ironclad
+                :byte-array-to-hex-string)
+  (:import-from :ironclad
+                :digest-sequence)
+
+  (:import-from :ironclad
+                :ascii-string-to-byte-array)
+
   (:export :user-name
            :user-email
            :user-birth-date
            :find-user
-           :find-users))
+           :find-users
+           :make-md5-hexdigest))
 (in-package :caveman2-tutorial.model.user)
 
 (defclass user ()
@@ -35,3 +44,7 @@
 (defun find-users ()
   (with-connection (db)
     (retrieve-dao 'user)))
+
+(defun make-md5-hexdigest (string)
+  (byte-array-to-hex-string
+   (digest-sequence :md5 (ascii-string-to-byte-array string))))
