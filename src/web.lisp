@@ -41,8 +41,10 @@
   (render #P "users/new.html"))
 
 (defroute "/users/:id" (&key id)
+  (setf u (find-user id))
   (render #P"users/show.html"
-          (list :user (find-user id))))
+          (list :user (list :name (user-name u)
+                            :email (make-md5-hexdigest (user-email u))))))
 
 (defroute "/api/users" ()
   (setf users (find-users))

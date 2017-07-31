@@ -1,9 +1,14 @@
 {% extends "layouts/default.html" %}
-{% block title %}Sign up{% endblock %}
+{% block title %} {{ user.name }} {% endblock %}
 {% block content %}
-
-  {{ user.name }}
-  ,
-  {{ user.email }}
-
+  <div class="row">
+    <aside class="col-md-4">
+      <section class="user_info">
+        <h1>
+          <img src="https://secure.gravatar.com/avatar/{{ user.email }}">
+          {{ user.name }}
+        </h1>
+      </section>
+    </aside>
+  </div>
 {% endblock %}
