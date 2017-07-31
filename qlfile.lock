@@ -2,3 +2,11 @@
  (:class qlot.source.ql:source-ql-all
   :initargs (:project-name "quicklisp" :%version :latest)
   :version "2017-07-25"))
+("caveman" .
+ (:class qlot.source.ql:source-ql
+  :initargs (:project-name "caveman" :%version "2016-10-31")
+  :version "ql-2016-10-31"))
+("clack" .
+ (:class qlot.source.ql:source-ql
+  :initargs (:project-name "clack" :%version "2017-04-03")
+  :version "ql-2017-04-03"))
