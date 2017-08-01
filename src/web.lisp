@@ -40,14 +40,18 @@
 (defroute "/users/new" ()
   (render #P "users/new.html"))
 
+(defroute "/params" (&key _parsed)
+  (format nil "~A" _parsed))
+
 (defroute ("/users/create":method :POST) (&key _parsed)
-  (format nil "~S" (cdr (assoc "user" _parsed :test #'string=))))
+  (setf u (find-user (object-id (create-user (cdr (assoc "user" _parsed :test #'string=))))))
+  (render #P"users/show.html" (user-info u)))
 
 (defroute "/users/:id" (&key id)
   (setf u (find-user id))
-  (render #P"users/show.html"
-          (list :user (list :name (user-name u)
-                            :email (make-md5-hexdigest (user-email u))))))
+  (if (null u)
+      (render #P"_errors/404.html")
+      (render #P"users/show.html" (user-info u))))
 
 (defroute "/api/users" ()
   (setf users (find-users))
