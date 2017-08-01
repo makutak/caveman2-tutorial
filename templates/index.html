@@ -7,10 +7,10 @@
     {% for user in users %}
       <li>
         {{ user.name }}
-        {{ user.birth-date}}
+        {{ user.birth-date | date }}
+        {{ user.email }}
       </li>
     {% endfor %}
   </ul>
 </div>
-
 {% endblock %}
