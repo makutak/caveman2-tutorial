@@ -40,6 +40,9 @@
 (defroute "/users/new" ()
   (render #P "users/new.html"))
 
+(defroute ("/users/create":method :POST) (&key _parsed)
+  (format nil "~S" (cdr (assoc "user" _parsed :test #'string=))))
+
 (defroute "/users/:id" (&key id)
   (setf u (find-user id))
   (render #P"users/show.html"
