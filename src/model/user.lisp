@@ -18,7 +18,8 @@
            :find-user
            :find-users
            :user-info
-           :create-user))
+           :create-user
+           :valid-user))
 (in-package :caveman2-tutorial.model.user)
 
 (defclass user ()
@@ -54,19 +55,17 @@
                     :email (make-md5-hexdigest (user-email user-instance)))))
 
 (defun create-user (params)
-  (when (valid-params params)
-    (setf new-user (make-instance 'user
-                                  :name (get-value-from-params "name" params)
-                                  :email (get-value-from-params "email" params)
-                                  :password (get-value-from-params "password" params)
-                                  :birth-date (parse-timestring "1992-03-06")))
-    (with-connection (db) (insert-dao new-user)))
-  new-user)
+  (setf new-user (make-instance 'user
+                                :name (get-value-from-params "name" params)
+                                :email (get-value-from-params "email" params)
+                                :password (get-value-from-params "password" params)
+                                :birth-date (parse-timestring "1992-03-06")))
+  (with-connection (db) (insert-dao new-user)))
 
 (defmacro valid (key params)
   `(not (= 0 (length (get-value-from-params ,key ,params)))))
 
-(defun valid-params (params)
+(defun valid-user (params)
   (and (valid "name" params)
        (valid "email" params)
        (valid "password" params)))

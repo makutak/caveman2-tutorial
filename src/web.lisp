@@ -44,8 +44,10 @@
   (format nil "~A" _parsed))
 
 (defroute ("/users/create" :method :POST) (&key _parsed)
-  (setf u (find-user (object-id (create-user (cdr (assoc "user" _parsed :test #'string=))))))
-  (redirect (format nil "/users/~A" (object-id u))))
+  (setf params (cdr (assoc "user" _parsed :test #'string=)))
+  (if (valid-user params)
+      (redirect (format nil "/users/~A" (object-id (create-user params))))
+      (redirect "/users/new")))
 
 (defroute "/users/:id" (&key id)
   (setf u (find-user id))
