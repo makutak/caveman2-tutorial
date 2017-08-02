@@ -63,6 +63,9 @@
     (with-connection (db) (insert-dao new-user)))
   new-user)
 
+(defmacro valid (key params)
+  `(not (= 0 (length (get-value-from-params ,key ,params)))))
+
 (defun valid-params (params)
   (and (valid "name" params)
        (valid "email" params)
@@ -70,6 +73,3 @@
 
 (defun get-value-from-params (key params)
   (cdr (assoc key params :test #'string=)))
-
-(defmacro valid (key params)
-  `(not (= 0 (length (get-value-from-params ,key ,params)))))
