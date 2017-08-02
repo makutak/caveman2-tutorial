@@ -51,7 +51,7 @@
 
 (defun user-info (user-instance)
   (list :user (list :name (user-name user-instance)
-                    :email (user-email user-instance))))
+                    :email (make-md5-hexdigest (user-email user-instance)))))
 
 (defun create-user (params)
   (when (valid-params params)
