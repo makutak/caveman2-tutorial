@@ -42,9 +42,6 @@
 (defroute "/users/new" ()
   (render #P "users/new.html"))
 
-(defroute "/params" (&key _parsed)
-  (format nil "~A" _parsed))
-
 (defroute ("/users/create" :method :POST) (&key _parsed)
   (setf params (cdr (assoc "user" _parsed :test #'string=)))
   (if (valid-user params)
