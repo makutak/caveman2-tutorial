@@ -36,6 +36,9 @@
 (defroute "/about" ()
   (render #P "static_pages/about.html"))
 
+(defroute "/signup" ()
+  (redirect "/users/new"))
+
 (defroute "/users/new" ()
   (render #P "users/new.html"))
 
