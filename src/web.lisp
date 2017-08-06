@@ -25,8 +25,7 @@
 ;; Routing rules
 
 (defroute "/" ()
-  (render #P"index.html"
-          (list :users (find-users))))
+  (redirect "/home"))
 
 (defroute "/home" ()
   (render #P "static_pages/home.html"))
