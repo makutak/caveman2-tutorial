@@ -72,7 +72,9 @@
   (setf user (find-user id))
   (render-json user))
 
-
+(defroute "/counter" ()
+  (format nil "You came here ~A times."
+          (incf (gethash :counter *session* 0))))
 
 ;;
 ;; Error pages
