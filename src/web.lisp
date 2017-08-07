@@ -54,6 +54,9 @@
       (render #P"_errors/404.html")
       (render #P"users/show.html" (user-info u))))
 
+(defroute "/login" ()
+  (render #P"sessions/new.html"))
+
 (defroute "/api/users" ()
   (setf users (find-users))
   (render-json users))
