@@ -57,6 +57,13 @@
 (defroute "/login" ()
   (render #P"sessions/new.html"))
 
+(defroute ("/login" :method :POST) (&key _parsed)
+  ;;(format nil "~A" _parsed)
+  (format nil "~A" (request-env *request*)) )
+
+(defroute ("/logout" :method :DESTROY) ()
+  (format nil "This is logout page"))
+
 (defroute "/api/users" ()
   (setf users (find-users))
   (render-json users))
