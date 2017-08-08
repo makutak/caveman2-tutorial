@@ -18,7 +18,8 @@
            :user-birth-date
            :user-info
            :create-user
-           :valid-user))
+           :valid-user
+           :get-value-from-params))
 (in-package :caveman2-tutorial.model.user)
 
 (defclass user ()
