@@ -12,11 +12,10 @@
   (:import-from :ironclad
                 :ascii-string-to-byte-array)
 
-  (:export :user-name
+  (:export :user
+           :user-name
            :user-email
            :user-birth-date
-           :find-user
-           :find-users
            :user-info
            :create-user
            :valid-user))
@@ -36,15 +35,6 @@
              :initarg :password))
   (:metaclass mito:dao-table-class)
   (:unique-key name email))
-
-
-(defun find-user (id)
-  (with-connection (db)
-    (find-dao 'user :id id)))
-
-(defun find-users ()
-  (with-connection (db)
-    (retrieve-dao 'user)))
 
 (defun make-md5-hexdigest (string)
   (byte-array-to-hex-string

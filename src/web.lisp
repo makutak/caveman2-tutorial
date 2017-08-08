@@ -8,6 +8,8 @@
         :caveman2-tutorial.model.user
         :mito
         :sxql)
+  (:import-from :lack.component
+                :call)
   (:export :*web*))
 (in-package :caveman2-tutorial.web)
 
@@ -19,6 +21,9 @@
 
 (defclass <web> (<app>) ())
 (defvar *web* (make-instance '<web>))
+(defmethod lack.component:call :around ((app <web>) env)
+  (with-connection (db)
+    (call-next-method)))
 (clear-routing-rules *web*)
 
 ;;
@@ -49,7 +54,7 @@
       (redirect "/users/new")))
 
 (defroute "/users/:id" (&key id)
-  (setf u (find-user id))
+  (setf u (find-dao 'user :id id))
   (if (null u)
       (render #P"_errors/404.html")
       (render #P"users/show.html" (user-info u))))
@@ -58,18 +63,18 @@
   (render #P"sessions/new.html"))
 
 (defroute ("/login" :method :POST) (&key _parsed)
-  ;;(format nil "~A" _parsed)
-  (format nil "~A" (request-env *request*)) )
+  (setf params (cdr (assoc "session" _parsed :test #'string=)))
+  (format nil "~A" params))
 
 (defroute ("/logout" :method :DESTROY) ()
   (format nil "This is logout page"))
 
 (defroute "/api/users" ()
-  (setf users (find-users))
+  (setf users (retrieve-dao 'user))
   (render-json users))
 
 (defroute "/api/user/:id" (&key id)
-  (setf user (find-user id))
+  (setf user (find-dao 'user :id id))
   (render-json user))
 
 (defroute "/counter" ()
