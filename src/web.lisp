@@ -64,7 +64,12 @@
 
 (defroute ("/login" :method :POST) (&key _parsed)
   (setf params (cdr (assoc "session" _parsed :test #'string=)))
-  (format nil "~A" params))
+  (setf login-user (find-dao 'user
+                             :email
+                             (get-value-from-params "email" params)))
+  (unless (null login-user)
+    (format nil "~A" (user-name login-user))
+    (format nil "そんな人いないよ！")))
 
 (defroute ("/logout" :method :DESTROY) ()
   (format nil "This is logout page"))
