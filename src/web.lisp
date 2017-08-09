@@ -66,10 +66,14 @@
   (setf params (cdr (assoc "session" _parsed :test #'string=)))
   (setf login-user (find-dao 'user
                              :email
-                             (get-value-from-params "email" params)))
+                             (get-value-from-params "email" params)
+                             :password
+                             (get-value-from-params "password" params)))
   (if (null login-user)
-      (redirect "/login")
-      (format nil "~A" (user-name login-user))))
+      (render #P"sessions/new.html")
+      (progn
+        (setf (gethash :user-id *session*) (object-id login-user))
+        (redirect (format nil  "/users/~A" (gethash :user-id *session*))))))
 
 (defroute ("/logout" :method :DESTROY) ()
   (format nil "This is logout page"))
