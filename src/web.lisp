@@ -68,8 +68,8 @@
                              :email
                              (get-value-from-params "email" params)))
   (if (null login-user)
-    (format nil "そんな人いないよ！")
-    (format nil "~A" (user-name login-user))))
+      (format nil "そんな人いないよ！")
+      (format nil "~A" (user-name login-user))))
 
 (defroute ("/logout" :method :DESTROY) ()
   (format nil "This is logout page"))
