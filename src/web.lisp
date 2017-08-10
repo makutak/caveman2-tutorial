@@ -91,7 +91,6 @@
           (incf (gethash :counter *session* 0))))
 
 (defroute "/current-user" ()
-  (current-user)
   (format nil "~A" (user-name (current-user))))
 
 
