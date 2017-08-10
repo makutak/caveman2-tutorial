@@ -100,8 +100,8 @@
 
 (defun current-user ()
   (or *current-user*
-       (setf *current-user*
-             (find-dao 'user :id (gethash :user-id *session*)))))
+      (setf *current-user*
+            (find-dao 'user :id (gethash :user-id *session*)))))
 
 
 ;;
