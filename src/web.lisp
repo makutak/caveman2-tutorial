@@ -100,7 +100,7 @@
 (defparameter *current-user* nil)
 
 (defun current-user ()
-  (or  *current-user*
+  (or *current-user*
        (setf *current-user*
              (find-dao 'user :id (gethash :user-id *session*)))))
 
