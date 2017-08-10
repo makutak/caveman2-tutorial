@@ -90,6 +90,21 @@
   (format nil "You came here ~A times."
           (incf (gethash :counter *session* 0))))
 
+(defroute "/current-user" ()
+  (current-user)
+  (format nil "~A" (user-name (current-user))))
+
+
+;;
+;; Helper functions
+(defparameter *current-user* nil)
+
+(defun current-user ()
+  (or  *current-user*
+       (setf *current-user*
+             (find-dao 'user :id (gethash :user-id *session*)))))
+
+
 ;;
 ;; Error pages
 
