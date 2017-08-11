@@ -49,7 +49,7 @@
   (render #P"users/new.html"))
 
 (defroute ("/users/create" :method :POST) (&key _parsed)
-  (setf params (cdr (assoc "user" _parsed :test #'string=)))
+  (setf params (get-value-from-params "user" _parsed))
   (if (valid-user params)
       (redirect (format nil "/users/~A" (object-id (create-user params))))
       (redirect "/users/new")))
@@ -64,7 +64,7 @@
   (render #P"sessions/new.html"))
 
 (defroute ("/login" :method :POST) (&key _parsed)
-  (setf params (cdr (assoc "session" _parsed :test #'string=)))
+  (setf params (get-value-from-params "session" _parsed))
   (setf login-user (find-dao 'user
                              :email
                              (get-value-from-params "email" params)
