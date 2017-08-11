@@ -50,9 +50,12 @@
 
 (defroute ("/users/create" :method :POST) (&key _parsed)
   (setf params (get-value-from-params "user" _parsed))
-  (if (valid-user params)
-      (redirect (format nil "/users/~A" (object-id (create-user params))))
-      (redirect "/users/new")))
+  (when (valid-user params)
+    (if (gethash :user-id *session*)
+        (reset-current-user))
+    (setf (gethash :user-id *session*) (object-id (create-user params)))
+    (redirect (format nil "/users/~A" (object-id (current-user)))))
+  (redirect "/users/new"))
 
 (defroute "/users/:id" (&key id)
   (setf u (find-dao 'user :id id))
@@ -103,6 +106,10 @@
   (or *current-user*
       (setf *current-user*
             (find-dao 'user :id (gethash :user-id *session*)))))
+
+(defun reset-current-user ()
+  (setf (gethash :user-id *session*) nil)
+  (setf *current-user* nil))
 
 
 ;;
