@@ -27,12 +27,13 @@
   :components ((:module "src"
                 :components
                 ((:file "main" :depends-on ("config" "view" "db" "model"))
-                 (:file "web" :depends-on ("view"))
+                 (:file "web" :depends-on ("view" "util"))
+                 (:file "util")
                  (:file "view" :depends-on ("config"))
                  (:file "db" :depends-on ("config"))
                  (:file "config")
                  (:module "model"
-                  :depends-on ("db")
+                  :depends-on ("db" "util")
                   :components
                   ((:file  "user"))))))
 

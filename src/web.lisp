@@ -5,6 +5,7 @@
         :caveman2-tutorial.config
         :caveman2-tutorial.view
         :caveman2-tutorial.db
+        :caveman2-tutorial.util
         :caveman2-tutorial.model.user
         :mito
         :sxql)

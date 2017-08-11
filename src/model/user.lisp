@@ -2,6 +2,7 @@
 (defpackage caveman2-tutorial.model.user
   (:use :cl
         :caveman2-tutorial.db
+        :caveman2-tutorial.util
         :mito
         :sxql
         :local-time)
@@ -18,8 +19,7 @@
            :user-birth-date
            :user-info
            :create-user
-           :valid-user
-           :get-value-from-params))
+           :valid-user))
 (in-package :caveman2-tutorial.model.user)
 
 (defclass user ()
@@ -36,10 +36,6 @@
              :initarg :password))
   (:metaclass mito:dao-table-class)
   (:unique-key name email))
-
-(defun make-md5-hexdigest (string)
-  (byte-array-to-hex-string
-   (digest-sequence :md5 (ascii-string-to-byte-array string))))
 
 (defun user-info (user-instance)
   (list :user (list :name (user-name user-instance)
@@ -60,6 +56,3 @@
   (and (valid "name" params)
        (valid "email" params)
        (valid "password" params)))
-
-(defun get-value-from-params (key params)
-  (cdr (assoc key params :test #'string=)))
