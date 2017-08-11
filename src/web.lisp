@@ -34,19 +34,19 @@
   (redirect "/home"))
 
 (defroute "/home" ()
-  (render #P "static_pages/home.html"))
+  (render #P"static_pages/home.html"))
 
 (defroute "/help" ()
-  (render #P "static_pages/help.html"))
+  (render #P"static_pages/help.html"))
 
 (defroute "/about" ()
-  (render #P "static_pages/about.html"))
+  (render #P"static_pages/about.html"))
 
 (defroute "/signup" ()
   (redirect "/users/new"))
 
 (defroute "/users/new" ()
-  (render #P "users/new.html"))
+  (render #P"users/new.html"))
 
 (defroute ("/users/create" :method :POST) (&key _parsed)
   (setf params (cdr (assoc "user" _parsed :test #'string=)))
