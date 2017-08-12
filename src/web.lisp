@@ -11,7 +11,8 @@
         :sxql)
   (:import-from :lack.component
                 :call)
-  (:export :*web*))
+  (:export :*web*
+           :current-user))
 (in-package :caveman2-tutorial.web)
 
 ;; for @route annotation
@@ -100,26 +101,22 @@
 (defroute "/check-logged-in" ()
   (format nil "~A" (logged-in-p)))
 
-
+(defroute "/test" ()
+  (format nil "~A" (user-name (current-user))))
 ;;
 ;; Helper functions
-(defparameter *current-user* nil)
-
 (defun current-user ()
-  (or *current-user*
-      (setf *current-user*
-            (find-dao 'user :id (gethash :user-id *session*)))))
+  (find-dao 'user :id (gethash :user-id *session* 0)))
 
 (defun reset-current-user ()
-  (setf (gethash :user-id *session*) nil)
-  (setf *current-user* nil))
+  (setf (gethash :user-id *session*) nil))
 
 (defun log-in (user)
   (reset-current-user)
   (setf (gethash :user-id *session*) (object-id user)))
 
 (defun logged-in-p ()
-  (not (null *current-user*)))
+  (not (null (current-user))))
 
 
 ;;

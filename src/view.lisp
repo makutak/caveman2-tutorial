@@ -11,6 +11,8 @@
                 :compile-template*
                 :render-template*
                 :*djula-execute-package*)
+  (:import-from :caveman2-tutorial.web
+                :current-user)
   (:import-from :datafly
                 :encode-json)
   (:export :render
@@ -28,7 +30,9 @@
       (setf (gethash template-path *template-registry*) template))
     (apply #'djula:render-template*
            template nil
-           env)))
+           (append
+            env
+            (list :current-user (current-user))))))
 
 (defun render-json (object)
   (setf (getf (response-headers *response*) :content-type) "application/json")
