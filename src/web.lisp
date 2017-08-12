@@ -113,7 +113,7 @@
   (find-dao 'user :id (gethash :user-id *session* 0)))
 
 (defun reset-current-user ()
-  (setf (gethash :user-id *session*) 0))
+  (remhash :user-id *session*))
 
 (defun log-in (user)
   (reset-current-user)
