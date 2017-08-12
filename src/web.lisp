@@ -97,6 +97,9 @@
 (defroute "/current-user" ()
   (format nil "~A" (user-name (current-user))))
 
+(defroute "/check-logged-in" ()
+  (format nil "~A" (logged-in-p)))
+
 
 ;;
 ;; Helper functions
@@ -114,6 +117,9 @@
 (defun log-in (user)
   (reset-current-user)
   (setf (gethash :user-id *session*) (object-id user)))
+
+(defun logged-in-p ()
+  (not (null *current-user*)))
 
 
 ;;
