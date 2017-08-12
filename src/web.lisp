@@ -11,8 +11,7 @@
         :sxql)
   (:import-from :lack.component
                 :call)
-  (:export :*web*
-           :current-user))
+  (:export :*web*))
 (in-package :caveman2-tutorial.web)
 
 ;; for @route annotation
