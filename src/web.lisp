@@ -82,8 +82,9 @@
         (log-in login-user)
         (redirect (format nil  "/users/~A" (gethash :user-id *session*))))))
 
-(defroute ("/logout" :method :DESTROY) ()
-  (format nil "This is logout page"))
+(defroute ("/logout" :method :POST) ()
+  (reset-current-user)
+  (redirect "/home"))
 
 (defroute "/api/users" ()
   (setf users (retrieve-dao 'user))
@@ -105,13 +106,14 @@
 
 (defroute "/test" ()
   (format nil "~A" (user-name (current-user))))
+
 ;;
 ;; Helper functions
 (defun current-user ()
   (find-dao 'user :id (gethash :user-id *session* 0)))
 
 (defun reset-current-user ()
-  (setf (gethash :user-id *session*) nil))
+  (setf (gethash :user-id *session*) 0))
 
 (defun log-in (user)
   (reset-current-user)
