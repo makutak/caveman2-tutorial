@@ -30,23 +30,26 @@
 ;;
 ;; Routing rules
 
+(defun render-with-current (template-path &optional args)
+  (render template-path (append args (list :current (current-user)))))
+
 (defroute "/" ()
   (redirect "/home"))
 
 (defroute "/home" ()
-  (render #P"static_pages/home.html"))
+  (render-with-current #P"static_pages/home.html"))
 
 (defroute "/help" ()
-  (render #P"static_pages/help.html"))
+  (render-with-current #P"static_pages/help.html"))
 
 (defroute "/about" ()
-  (render #P"static_pages/about.html"))
+  (render-with-current #P"static_pages/about.html"))
 
 (defroute "/signup" ()
   (redirect "/users/new"))
 
 (defroute "/users/new" ()
-  (render #P"users/new.html"))
+  (render-with-current #P"users/new.html"))
 
 (defroute ("/users/create" :method :POST) (&key _parsed)
   (setf params (get-value-from-params "user" _parsed))
@@ -60,11 +63,11 @@
 (defroute "/users/:id" (&key id)
   (setf u (find-dao 'user :id id))
   (if (null u)
-      (render #P"_errors/404.html")
-      (render #P"users/show.html" (user-info u))))
+      (render-with-current #P"_errors/404.html")
+      (render-with-current #P"users/show.html" (user-info u))))
 
 (defroute "/login" ()
-  (render #P"sessions/new.html"))
+  (render-with-current #P"sessions/new.html"))
 
 (defroute ("/login" :method :POST) (&key _parsed)
   (setf params (get-value-from-params "session" _parsed))
@@ -74,7 +77,7 @@
                              :password
                              (get-value-from-params "password" params)))
   (if (null login-user)
-      (render #P"sessions/new.html")
+      (render-with-current #P"sessions/new.html")
       (progn
         (log-in login-user)
         (redirect (format nil  "/users/~A" (gethash :user-id *session*))))))
