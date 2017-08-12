@@ -53,7 +53,7 @@
   (when (valid-user params)
     (if (gethash :user-id *session*)
         (reset-current-user))
-    (setf (gethash :user-id *session*) (object-id (create-user params)))
+    (log-in (create-user params))
     (redirect (format nil "/users/~A" (object-id (current-user)))))
   (redirect "/users/new"))
 
@@ -76,7 +76,7 @@
   (if (null login-user)
       (render #P"sessions/new.html")
       (progn
-        (setf (gethash :user-id *session*) (object-id login-user))
+        (log-in login-user)
         (redirect (format nil  "/users/~A" (gethash :user-id *session*))))))
 
 (defroute ("/logout" :method :DESTROY) ()
@@ -110,6 +110,10 @@
 (defun reset-current-user ()
   (setf (gethash :user-id *session*) nil)
   (setf *current-user* nil))
+
+(defun log-in (user)
+  (reset-current-user)
+  (setf (gethash :user-id *session*) (object-id user)))
 
 
 ;;
