@@ -19,7 +19,8 @@
            :user-birth-date
            :user-info
            :create-user
-           :valid-user))
+           :valid-user
+           :authenticate-user))
 (in-package :caveman2-tutorial.model.user)
 
 (defclass user ()
@@ -58,3 +59,9 @@
   (and (valid "name" params)
        (valid "email" params)
        (valid "password" params)))
+
+(defun authenticate-user (user-instance input-password)
+  (let ((password-hash (slot-value user-instance 'password)))
+    (if password-hash
+        (values (cl-pass:check-password input-password password-hash) t)
+        (values nil nil))))

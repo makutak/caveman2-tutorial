@@ -73,14 +73,13 @@
   (setf params (get-value-from-params "session" _parsed))
   (setf login-user (find-dao 'user
                              :email
-                             (get-value-from-params "email" params)
-                             :password
-                             (get-value-from-params "password" params)))
-  (if (null login-user)
-      (render-with-current #P"sessions/new.html")
-      (progn
-        (log-in login-user)
-        (redirect (format nil  "/users/~A" (gethash :user-id *session*))))))
+                             (get-value-from-params "email" params)))
+  (when login-user
+    (when (authenticate-user login-user
+                             (get-value-from-params "password" params))
+      (log-in login-user)
+      (redirect (format nil  "/users/~A" (gethash :user-id *session*)))))
+  (render-with-current #P"sessions/new.html"))
 
 (defroute ("/logout" :method :POST) ()
   (reset-current-user)
