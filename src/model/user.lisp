@@ -46,7 +46,8 @@
         (make-instance 'user
                        :name (get-value-from-params "name" params)
                        :email (get-value-from-params "email" params)
-                       :password (get-value-from-params "password" params)
+                       :password (cl-pass:hash
+                                  (get-value-from-params "password" params))
                        :birth-date (parse-timestring "1992-03-06")))
   (with-connection (db) (insert-dao new-user)))
 
