@@ -39,6 +39,9 @@
 (defroute "/home" ()
   (render-with-current #P"static_pages/home.html"))
 
+(defroute "/flash" ()
+  (format nil "~A" (gethash :flash *session*)))
+
 (defroute "/help" ()
   (render-with-current #P"static_pages/help.html"))
 
@@ -49,7 +52,10 @@
   (redirect "/users/new"))
 
 (defroute "/users/new" ()
-  (render-with-current #P"users/new.html"))
+  (flash "Please input infomation. ")
+  (render-with-current #P"users/new.html"
+                       (list :flash (flash)
+                             :type "info")))
 
 (defroute ("/users/create" :method :POST) (&key _parsed)
   (setf params (get-value-from-params "user" _parsed))
@@ -57,6 +63,7 @@
     (if (gethash :user-id *session*)
         (reset-current-user))
     (log-in (create-user params))
+    (flash "Welcome to the Sample App!")
     (redirect (format nil "/users/~A" (object-id (current-user)))))
   (redirect "/users/new"))
 
@@ -64,7 +71,9 @@
   (setf u (find-dao 'user :id id))
   (if (null u)
       (render-with-current #P"_errors/404.html")
-      (render-with-current #P"users/show.html" (user-info u))))
+      (render-with-current #P"users/show.html"
+                           (append (user-info u)
+                                   (list :flash (flash) :type "success")))))
 
 (defroute "/login" ()
   (render-with-current #P"sessions/new.html"))
@@ -78,8 +87,12 @@
     (when (authenticate-user login-user
                              (get-value-from-params "password" params))
       (log-in login-user)
+      (flash "Welcome to the Sample App!")
       (redirect (format nil  "/users/~A" (gethash :user-id *session*)))))
-  (render-with-current #P"sessions/new.html"))
+  (flash "Invalid email/password combination")
+  (render-with-current #P"sessions/new.html"
+                       (list :flash (flash)
+                             :type "danger")))
 
 (defroute ("/logout" :method :POST) ()
   (reset-current-user)

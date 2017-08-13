@@ -13,12 +13,20 @@
   (:import-from :ironclad
                 :ascii-string-to-byte-array)
   (:export :get-value-from-params
-           :make-md5-hexdigest))
+           :make-md5-hexdigest
+           :flash))
 (in-package :caveman2-tutorial.util)
 
 
 ;;
 ;; Util functions
+
+(defun flash (&optional value)
+  (if value
+      (setf (gethash :flash *session*) value)
+      (let ((msg (gethash :flash *session*)))
+        (remhash :flash *session*)
+        msg)))
 
 
 (defun get-value-from-params (key params)
