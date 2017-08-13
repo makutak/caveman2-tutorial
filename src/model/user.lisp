@@ -32,7 +32,7 @@
    (birth-date :col-type (:datetime)
                :initargs :birth-date
                :accessor user-birth-date)
-   (password :col-type (:varchar 16)
+   (password :col-type (:varchar 256)
              :initarg :password))
   (:metaclass mito:dao-table-class)
   (:unique-key name email))

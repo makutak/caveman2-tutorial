@@ -23,7 +23,10 @@
                ;; for DB
                :sxql
                :datafly
-               :mito)
+               :mito
+
+               ;; Password hashing
+               :cl-pass)
   :components ((:module "src"
                 :components
                 ((:file "main" :depends-on ("config" "view" "db" "model"))
