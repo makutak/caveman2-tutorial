@@ -75,6 +75,19 @@
                            (append (user-info u)
                                    (list :flash (flash) :type "success")))))
 
+(defroute "/users/:id/edit" (&key id)
+  (render #P"users/edit.html"
+          (list :user (list :id (object-id (current-user))
+                            :name (user-name (current-user))
+                            :email (user-email (current-user))
+                            :hash-email (make-md5-hexdigest
+                                         (user-email (current-user)))))))
+
+(defroute ("/users/:id/update" :method :POST) (&key _parsed)
+  ;;ひとまずリダイレクトさせるだけ
+  (flash "update success")
+  (redirect (format nil "/users/~A" (object-id (current-user)))))
+
 (defroute "/login" ()
   (render-with-current #P"sessions/new.html"))
 

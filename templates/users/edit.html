@@ -1,0 +1,41 @@
+{% extends "layouts/default.html" %}
+{% block title %}Edit User{% endblock %}
+{% block content %}
+
+  <h1>Update your profile</h1>
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <form accept-charset="UTF-8" action="/users/{{ user.id }}/update"
+            class="edit_user" id="edit_user" method="post">
+        <input name="_method" type="hidden" value="PATCH">
+        <fieldset>
+          <label for="user_name">Name</label>
+          <input id="user_name" name="user[name]"
+                 type="text" value="{{ user.name }}" required>
+
+          <label for="user_email">Email</label>
+          <input id="user_email" name="user[email]"
+                 type="email" value="{{ user.email }}" required>
+
+          <label for="user_password">Password</label>
+          <input id="user_password" name="user[password]"
+                 type="password" required>
+
+          <label for="user_password_confirmation">Confirmation</label>
+          <input id="user_password_confirmation"
+                 name="user[password_confirmation]" type="password" required>
+
+          <input class="btn btn-primary" name="commit"
+                 type="submit" value="Update your profile">
+        </fieldset>
+      </form>
+
+      <br>
+      <div class="gravatar_edit">
+        <img src="https://secure.gravatar.com/avatar/{{ user.hash-email }}"
+             class="gravatar">
+        <a href="http://gravatar.com/emails" target="_blank">change</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}
