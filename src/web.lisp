@@ -78,6 +78,7 @@
 
 (defroute "/users/:id/edit" (&key id)
   (logged-in-user)
+  (correct-user id)
   (setf current-user (find-dao 'user :id id))
   (render-with-current #P"users/edit.html"
           (list :user (list :id (object-id current-user)
@@ -86,8 +87,10 @@
                             :hash-email (make-md5-hexdigest
                                          (user-email current-user))))))
 
-(defroute ("/users/:id/update" :method :POST) (&key _parsed)
+(defroute ("/users/:id/update" :method :POST) (&key id  _parsed)
   ;;ひとまずリダイレクトさせるだけ
+  (logged-in-user)
+  (correct-user id)
   (flash "update success")
   (redirect (format nil "/users/~A" (current-user-id))))
 
@@ -140,6 +143,11 @@
 (defroute "/logged-in-p" ()
   (format nil "~A" (logged-in-p)))
 
+(defroute "/check/:id" (&key id)
+  (format nil "~A ~A"
+          (type-of (format nil "~A" (current-user-id)))
+          (type-of (format nil "~A" id))))
+
 ;;
 ;; Helper functions
 (defun current-user-id ()
@@ -160,6 +168,12 @@
     (progn
       (flash "Please login.")
       (redirect "/login"))))
+
+(defun correct-user (id)
+  (unless (equal
+           (format nil "~A" (current-user-id))
+           (format nil "~A" id))
+    (redirect "/home")))
 ;;
 ;; Error pages
 
