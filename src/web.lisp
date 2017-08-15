@@ -31,7 +31,8 @@
 ;; Routing rules
 
 (defun render-with-current (template-path &optional args)
-  (render template-path (append args (list :current (current-user)))))
+  (render template-path (append args (list :current
+                                           (current-user-id)))))
 
 (defroute "/" ()
   (redirect "/home"))
@@ -76,20 +77,24 @@
                                    (list :flash (flash) :type "success")))))
 
 (defroute "/users/:id/edit" (&key id)
-  (render #P"users/edit.html"
-          (list :user (list :id (object-id (current-user))
-                            :name (user-name (current-user))
-                            :email (user-email (current-user))
+  (logged-in-user)
+  (setf current-user (find-dao 'user :id id))
+  (render-with-current #P"users/edit.html"
+          (list :user (list :id (object-id current-user)
+                            :name (user-name current-user)
+                            :email (user-email current-user)
                             :hash-email (make-md5-hexdigest
-                                         (user-email (current-user)))))))
+                                         (user-email current-user))))))
 
 (defroute ("/users/:id/update" :method :POST) (&key _parsed)
   ;;ひとまずリダイレクトさせるだけ
   (flash "update success")
-  (redirect (format nil "/users/~A" (object-id (current-user)))))
+  (redirect (format nil "/users/~A" (current-user-id))))
 
 (defroute "/login" ()
-  (render-with-current #P"sessions/new.html"))
+  (render-with-current #P"sessions/new.html"
+                       (list :flash (flash)
+                             :type "danger")))
 
 (defroute ("/login" :method :POST) (&key _parsed)
   (setf params (get-value-from-params "session" _parsed))
@@ -132,10 +137,13 @@
 (defroute "/test" ()
   (format nil "~A" (user-name (current-user))))
 
+(defroute "/logged-in-p" ()
+  (format nil "~A" (logged-in-p)))
+
 ;;
 ;; Helper functions
-(defun current-user ()
-  (find-dao 'user :id (gethash :user-id *session* 0)))
+(defun current-user-id ()
+  (gethash :user-id *session* nil))
 
 (defun reset-current-user ()
   (remhash :user-id *session*))
@@ -145,9 +153,13 @@
   (setf (gethash :user-id *session*) (object-id user)))
 
 (defun logged-in-p ()
-  (not (null (current-user))))
+  (not (null (current-user-id))))
 
-
+(defun logged-in-user ()
+  (unless (logged-in-p)
+    (progn
+      (flash "Please login.")
+      (redirect "/login"))))
 ;;
 ;; Error pages
 
