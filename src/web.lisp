@@ -87,7 +87,7 @@
                             :hash-email (make-md5-hexdigest
                                          (user-email current-user))))))
 
-(defroute ("/users/:id/update" :method :POST) (&key id  _parsed)
+(defroute ("/users/:id/update" :method :POST) (&key id _parsed)
   ;;ひとまずリダイレクトさせるだけ
   (logged-in-user)
   (correct-user id)
