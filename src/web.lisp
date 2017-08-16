@@ -65,7 +65,7 @@
         (reset-current-user))
     (log-in (create-user params))
     (flash "Welcome to the Sample App!")
-    (redirect (format nil "/users/~A" (object-id (current-user)))))
+    (redirect (format nil "/users/~A" (current-user-id))))
   (redirect "/users/new"))
 
 (defroute "/users/:id" (&key id)
