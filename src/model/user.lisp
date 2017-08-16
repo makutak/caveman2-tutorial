@@ -36,7 +36,7 @@
    (password :col-type (:varchar 256)
              :initarg :password))
   (:metaclass mito:dao-table-class)
-  (:unique-key name email))
+  (:unique-keys name email))
 
 (defun user-info (user-instance)
   (list :user (list :name (user-name user-instance)
