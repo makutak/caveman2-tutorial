@@ -88,11 +88,14 @@
                                          (user-email current-user))))))
 
 (defroute ("/users/:id/update" :method :POST) (&key id _parsed)
-  ;;ひとまずリダイレクトさせるだけ
   (logged-in-user)
   (correct-user id)
-  (flash "update success")
-  (redirect (format nil "/users/~A" (current-user-id))))
+  (setf params (get-value-from-params "user" _parsed))
+  (when (valid-user params)
+    (update-user (find-dao 'user :id (current-user-id)) params)
+    (flash "update success")
+    (redirect (format nil "/users/~A" (current-user-id))))
+  (redirect (format nil  "/users/~A/edit" (current-user-id))))
 
 (defroute "/login" ()
   (render-with-current #P"sessions/new.html"

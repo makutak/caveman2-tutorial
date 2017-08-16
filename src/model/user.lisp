@@ -19,6 +19,7 @@
            :user-birth-date
            :user-info
            :create-user
+           :update-user
            :valid-user
            :authenticate-user))
 (in-package :caveman2-tutorial.model.user)
@@ -51,6 +52,13 @@
                                   (get-value-from-params "password" params))
                        :birth-date (parse-timestring "1992-03-06")))
   (with-connection (db) (insert-dao new-user)))
+
+(defun update-user (instance params)
+  (setf (slot-value instance 'name) (get-value-from-params "name" params))
+  (setf (slot-value instance 'email) (get-value-from-params "email" params))
+  (setf (slot-value instance 'password) (get-value-from-params "password" params))
+  (with-connection (db) (save-dao instance)))
+
 
 (defmacro valid (key params)
   `(not (= 0 (length (get-value-from-params ,key ,params)))))
