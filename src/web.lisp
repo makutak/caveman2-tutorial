@@ -131,23 +131,6 @@
   (format nil "You came here ~A times."
           (incf (gethash :counter *session* 0))))
 
-(defroute "/current-user" ()
-  (format nil "~A" (user-name (current-user))))
-
-(defroute "/check-logged-in" ()
-  (format nil "~A" (logged-in-p)))
-
-(defroute "/test" ()
-  (format nil "~A" (user-name (current-user))))
-
-(defroute "/logged-in-p" ()
-  (format nil "~A" (logged-in-p)))
-
-(defroute "/check/:id" (&key id)
-  (format nil "~A ~A"
-          (type-of (format nil "~A" (current-user-id)))
-          (type-of (format nil "~A" id))))
-
 ;;
 ;; Helper functions
 (defun current-user-id ()
