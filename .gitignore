@@ -10,5 +10,5 @@
 quicklisp/
 log/*.log
 bundle-libs/
-static/css/
+static/css/*.css
 bower_components/
