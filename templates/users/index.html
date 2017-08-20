@@ -1,0 +1,14 @@
+{% extends "layouts/default.html" %}
+{% block title %} All Users {% endblock %}
+{% block content %}
+<h1>All Users</h1>
+
+<ul class="users">
+  {% for user in users %}
+  <li>
+    <img src="https://secure.gravatar.com/avatar/{{ user.email }}" class="gravatar">
+    {{ user.name }}
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

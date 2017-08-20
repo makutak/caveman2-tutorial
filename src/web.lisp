@@ -52,6 +52,16 @@
 (defroute "/signup" ()
   (redirect "/users/new"))
 
+(defroute "/users" ()
+  (setf users (retrieve-dao 'user))
+  (render-with-current #P"users/index.html"
+                       (list :users
+                             (mapcar #'(lambda (user)
+                                         (list :name (user-name user)
+                                               :email (make-md5-hexdigest
+                                                       (user-email user))))
+                                     users))))
+
 (defroute "/users/new" ()
   (flash "Please input infomation. ")
   (render-with-current #P"users/new.html"
