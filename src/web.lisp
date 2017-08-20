@@ -65,7 +65,7 @@
         (reset-current-user))
     (log-in (create-user params))
     (flash "Welcome to the Sample App!")
-    (redirect (format nil "/users/~A" (current-user-id))))
+    (redirect-back-or (format nil "/users/~A" (current-user-id))))
   (redirect "/users/new"))
 
 (defroute "/users/:id" (&key id)
@@ -112,7 +112,7 @@
                              (get-value-from-params "password" params))
       (log-in login-user)
       (flash "Welcome to the Sample App!")
-      (redirect (format nil  "/users/~A" (gethash :user-id *session*)))))
+      (redirect-back-or (format nil  "/users/~A" (current-user-id)))))
   (flash "Invalid email/password combination")
   (render-with-current #P"sessions/new.html"
                        (list :flash (flash)
@@ -140,7 +140,8 @@
   (gethash :user-id *session* nil))
 
 (defun reset-current-user ()
-  (remhash :user-id *session*))
+  (remhash :user-id *session*)
+  (remhash :forwarding-url *session*))
 
 (defun log-in (user)
   (reset-current-user)
@@ -152,6 +153,7 @@
 (defun logged-in-user ()
   (unless (logged-in-p)
     (progn
+      (store-location)
       (flash "Please login.")
       (redirect "/login"))))
 
@@ -160,6 +162,18 @@
            (format nil "~A" (current-user-id))
            (format nil "~A" id))
     (redirect "/home")))
+
+(defun redirect-back-or (default)
+  (let ((forwarding-url (gethash :forwarding-url *session* nil)))
+    (remhash :forwarding-url *session*)
+    (redirect
+     (or forwarding-url
+         default))))
+
+(defun store-location ()
+  (if (equal "GET" (format nil "~A" (request-method *request*)))
+      (setf (gethash :forwarding-url *session*)
+            (request-path-info *request*))))
 ;;
 ;; Error pages
 
