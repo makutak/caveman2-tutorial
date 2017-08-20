@@ -60,7 +60,8 @@
                                          (list :name (user-name user)
                                                :email (make-md5-hexdigest
                                                        (user-email user))))
-                                     users))))
+                                     users)
+                             :has-next-page T)))
 
 (defroute "/users/new" ()
   (flash "Please input infomation.")
