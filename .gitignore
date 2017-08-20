@@ -10,3 +10,5 @@
 quicklisp/
 log/*.log
 bundle-libs/
+static/css/
+
