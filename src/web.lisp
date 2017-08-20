@@ -63,7 +63,7 @@
                                      users))))
 
 (defroute "/users/new" ()
-  (flash "Please input infomation. ")
+  (flash "Please input infomation.")
   (render-with-current #P"users/new.html"
                        (list :flash (flash)
                              :type "info")))
