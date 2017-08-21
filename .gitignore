@@ -12,3 +12,4 @@ log/*.log
 bundle-libs/
 static/css/*.css
 bower_components/
+node_modules/
