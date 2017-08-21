@@ -26,7 +26,10 @@
                :mito
 
                ;; Password hashing
-               :cl-pass)
+               :cl-pass
+
+               ;;CSV import
+               :cl-csv)
   :components ((:module "src"
                 :components
                 ((:file "main" :depends-on ("config" "view" "db" "model"))

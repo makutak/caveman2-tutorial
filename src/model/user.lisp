@@ -3,9 +3,11 @@
   (:use :cl
         :caveman2-tutorial.db
         :caveman2-tutorial.util
+        :caveman2-tutorial.config
         :mito
         :sxql
-        :local-time)
+        :local-time
+        :cl-csv)
   (:import-from :ironclad
                 :byte-array-to-hex-string)
   (:import-from :ironclad
@@ -73,3 +75,13 @@
     (if password-hash
         (values (cl-pass:check-password input-password password-hash) t)
         (values nil nil))))
+
+(defun seed-user ()
+  (read-csv (merge-pathnames #P"seed-user.csv" *database-directory*)
+            :map-fn #'(lambda (row)
+                        (with-connection (db)
+                          (create-dao 'user
+                                      :name (nth 0 row)
+                                      :email (nth 1 row)
+                                      :birth-date (parse-timestring (nth 2 row))
+                                      :password (cl-pass:hash "password"))))))
