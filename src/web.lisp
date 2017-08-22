@@ -52,16 +52,20 @@
 (defroute "/signup" ()
   (redirect "/users/new"))
 
-(defroute "/users" ()
-  (setf users (retrieve-dao 'user))
-  (render-with-current #P"users/index.html"
-                       (list :users
-                             (mapcar #'(lambda (user)
-                                         (list :name (user-name user)
-                                               :email (make-md5-hexdigest
-                                                       (user-email user))))
-                                     users)
-                             :has-next-page T)))
+(defroute "/users" (&key _parsed)
+  (setf query (or (cdr (assoc "page" _parsed :test #'string=))
+                  "0"))
+  (handler-case (setf page (parse-integer query))
+    (error (c) (on-exception *web* 404))
+    (:no-error (c)
+      (setf users (select-dao 'user (limit (- (* page 10) 10) 10)))
+      (render-with-current #P"users/index.html"
+                           (list :users
+                                 (mapcar #'(lambda (user)
+                                             (list :name (user-name user)
+                                                   :email (make-md5-hexdigest
+                                                           (user-email user))))
+                                         users))))))
 
 (defroute "/users/new" ()
   (flash "Please input infomation.")
