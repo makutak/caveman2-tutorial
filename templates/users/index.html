@@ -3,6 +3,7 @@
 {% block content %}
 <h1>All Users</h1>
 
+{% include "partials/paginate.html" %}
 <ul class="users">
   {% for user in users %}
   <li>
@@ -12,4 +13,5 @@
   </li>
   {% endfor %}
 </ul>
+{% include "partials/paginate.html" %}
 {% endblock %}
