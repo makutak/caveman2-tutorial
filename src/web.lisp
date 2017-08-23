@@ -62,7 +62,8 @@
       (render-with-current #P"users/index.html"
                            (list :users
                                  (mapcar #'(lambda (user)
-                                             (list :name (user-name user)
+                                             (list :id  (object-id user)
+                                                   :name (user-name user)
                                                    :email (make-md5-hexdigest
                                                            (user-email user))))
                                          users))))))
