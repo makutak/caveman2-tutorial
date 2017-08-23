@@ -1,3 +1,5 @@
-ql caveman 2016-10-31
-ql clack 2017-04-03
+ql caveman :latest
+ql clack :latest
+ql mito :latest
+
 
