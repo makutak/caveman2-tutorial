@@ -14,3 +14,7 @@
  (:class qlot.source.ql:source-ql
   :initargs (:project-name "mito" :%version :latest)
   :version "ql-2017-07-25"))
+("woo" .
+ (:class qlot.source.ql:source-ql
+  :initargs (:project-name "woo" :%version :latest)
+  :version "ql-2017-07-25"))
