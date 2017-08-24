@@ -1,7 +1,7 @@
 $('.users').infiniteScroll({
   // options
-  path: 'users?page={{#}}',
+  path: '.page-link',
   append: '.users li',
-  history: true,
+  history: false,
   debug: true
 });

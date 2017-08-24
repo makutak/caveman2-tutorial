@@ -54,18 +54,21 @@
 
 (defroute "/users" (&key _parsed)
   (setf query (or (cdr (assoc "page" _parsed :test #'string=))
-                  "0"))
+                  "1"))
   (handler-case (setf page (parse-integer query))
     (error (c) (on-exception *web* 404))
     (:no-error (c)
       (setf users (select-dao 'user (limit (- (* page 10) 10) 10)))
-      (render-with-current #P"users/index.html"
-                           (list :users (mapcar #'(lambda (user)
-                                                    (list :id  (object-id user)
-                                                          :name (user-name user)
-                                                          :email (make-md5-hexdigest
-                                                                  (user-email user))))
-                                                users))))))
+      (if (null users)
+          (on-exception *web* 404)
+          (render-with-current #P"users/index.html"
+                               (list :next-page (1+ page)
+                                     :users (mapcar #'(lambda (user)
+                                                        (list :id  (object-id user)
+                                                              :name (user-name user)
+                                                              :email (make-md5-hexdigest
+                                                                      (user-email user))))
+                                                    users)))))))
 
 (defroute "/users/new" ()
   (flash "Please input infomation.")
