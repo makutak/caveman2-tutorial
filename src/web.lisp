@@ -63,9 +63,9 @@
       (throw-code 404))
   (setf users (select-dao 'user
                 (limit limit-number)
-                (offset (* limit-number (if (= (1- current-page) 0)
+                (offset (* limit-number (if (= current-page 1)
                                             0
-                                            current-page)))))
+                                            (1- current-page))))))
   (if (null users)
       (on-exception *web* 404)
       (render-with-current #P"users/index.html"
