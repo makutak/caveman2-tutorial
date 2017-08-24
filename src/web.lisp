@@ -59,18 +59,13 @@
     (error (c) (on-exception *web* 404))
     (:no-error (c)
       (setf users (select-dao 'user (limit (- (* page 10) 10) 10)))
-      (render-with-current
-       #P"users/index.html"
-       (list :pages (if (<= page 1)
-                        (list 1 2 3 4)
-                        (list (1- page) page (1+ page) (+ page 2)))
-             :users (mapcar #'(lambda (user)
-                                (list :id  (object-id user)
-                                      :name (user-name user)
-                                      :email (make-md5-hexdigest
-                                              (user-email user))
-                                      :birth-date (user-birth-date user)))
-                                  users))))))
+      (render-with-current #P"users/index.html"
+                           (list :users (mapcar #'(lambda (user)
+                                                    (list :id  (object-id user)
+                                                          :name (user-name user)
+                                                          :email (make-md5-hexdigest
+                                                                  (user-email user))))
+                                                users))))))
 
 (defroute "/users/new" ()
   (flash "Please input infomation.")
