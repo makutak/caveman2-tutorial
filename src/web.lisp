@@ -52,23 +52,30 @@
 (defroute "/signup" ()
   (redirect "/users/new"))
 
+(defvar limit-number 30)
+
 (defroute "/users" (&key _parsed)
   (setf query (or (cdr (assoc "page" _parsed :test #'string=))
                   "1"))
-  (handler-case (setf page (parse-integer query))
-    (error (c) (on-exception *web* 404))
-    (:no-error (c)
-      (setf users (select-dao 'user (limit (- (* page 10) 10) 10)))
-      (if (null users)
-          (on-exception *web* 404)
-          (render-with-current #P"users/index.html"
-                               (list :next-page (1+ page)
-                                     :users (mapcar #'(lambda (user)
-                                                        (list :id  (object-id user)
-                                                              :name (user-name user)
-                                                              :email (make-md5-hexdigest
-                                                                      (user-email user))))
-                                                    users)))))))
+  (handler-case (setf current-page (parse-integer query))
+    (error (c) (on-exception *web* 404)))
+  (if (>= 0 current-page)
+      (throw-code 404))
+  (setf users (select-dao 'user
+                (limit limit-number)
+                (offset (* limit-number (if (= (1- current-page) 0)
+                                            0
+                                            current-page)))))
+  (if (null users)
+      (on-exception *web* 404)
+      (render-with-current #P"users/index.html"
+                           (list :next-page (1+ current-page)
+                                 :users (mapcar #'(lambda (user)
+                                                    (list :id  (object-id user)
+                                                          :name (user-name user)
+                                                          :email (make-md5-hexdigest
+                                                                  (user-email user))))
+                                                users)))))
 
 (defroute "/users/new" ()
   (flash "Please input infomation.")
