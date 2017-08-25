@@ -54,8 +54,8 @@
 
 (defvar limit-number 30)
 
-(defroute "/users" (&key _parsed)
-  (setf query (or (cdr (assoc "page" _parsed :test #'string=))
+(defroute "/users" (&key |page|)
+  (setf query (or |page|
                   "1"))
   (handler-case (setf current-page (parse-integer query))
     (error (c) (on-exception *web* 404)))
