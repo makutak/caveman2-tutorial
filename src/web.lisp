@@ -143,7 +143,7 @@
                        (list :flash (flash)
                              :type "danger")))
 
-(defroute ("/logout" :method :POST) ()
+(defroute ("/logout" :method :DELETE) ()
   (reset-current-user)
   (redirect "/home"))
 
