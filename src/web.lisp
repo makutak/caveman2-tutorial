@@ -112,7 +112,7 @@
                             :hash-email (make-md5-hexdigest
                                          (user-email current-user))))))
 
-(defroute ("/users/:id/update" :method :POST) (&key id _parsed)
+(defroute ("/users/:id/update" :method :PUT) (&key id _parsed)
   (logged-in-user)
   (correct-user id)
   (setf params (get-value-from-params "user" _parsed))
