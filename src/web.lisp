@@ -166,8 +166,7 @@
   (gethash :user-id *session* nil))
 
 (defun reset-current-user ()
-  (remhash :user-id *session*)
-  (remhash :forwarding-url *session*))
+  (remhash :user-id *session*))
 
 (defun log-in (user)
   (reset-current-user)
