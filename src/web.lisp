@@ -55,6 +55,7 @@
 (defvar limit-number 30)
 
 (defroute "/users" (&key |page|)
+  (logged-in-user)
   (setf query (or |page|
                   "1"))
   (handler-case (setf current-page (parse-integer query))
