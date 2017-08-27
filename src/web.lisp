@@ -81,9 +81,7 @@
                                                            ))
                                                  users))
                             (list :flash (flash) :type "success")
-                            (list :admin (if (user-admin (find-dao 'user :id (current-user-id)))
-                                             1
-                                             0))))))
+                            (list :admin (user-admin (find-dao 'user :id (current-user-id))))))))
 
 (defroute "/users/new" ()
   (flash "Please input infomation.")

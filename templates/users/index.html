@@ -10,9 +10,9 @@
          class="gravatar">
     <a href="/users/{{ user.id }}">{{ user.name }}</a>
     {% ifnotequal current user.id %}
-      {% ifequal admin 1 %}
+      {% if admin %}
         | <a href="/users/{{ user.id }}/delete" data-confirm="You sure?" data-method="delete">delete</a>
-      {% endifequal %}
+      {% endif %}
     {% endifnotequal %}
   </li>
   {% endfor %}
