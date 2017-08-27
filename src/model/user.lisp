@@ -9,12 +9,6 @@
         :sxql
         :local-time
         :cl-csv)
-  (:import-from :ironclad
-                :byte-array-to-hex-string)
-  (:import-from :ironclad
-                :digest-sequence)
-  (:import-from :ironclad
-                :ascii-string-to-byte-array)
 
   (:export :user
            :user-name
@@ -36,7 +30,11 @@
           :accessor user-email)
    (birth-date :col-type (:datetime)
                :initargs :birth-date
-               :accessor user-birth-date))
+               :accessor user-birth-date)
+   (admin :col-type :boolean
+          :initarg :admin
+          :initform nil
+          :accessor user-admin))
   (:metaclass mito:dao-table-class)
   (:unique-keys name email))
 
