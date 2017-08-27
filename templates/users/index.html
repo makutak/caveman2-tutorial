@@ -9,6 +9,11 @@
     <img src="https://secure.gravatar.com/avatar/{{ user.email }}?s=50"
          class="gravatar">
     <a href="/users/{{ user.id }}">{{ user.name }}</a>
+    {% ifnotequal current user.id %}
+      {{ if user.admin }}
+      | <a href="/users/{{ user.id }}" data-confirm="You sure?" data-method="delete">delete</a>
+      {{ endif }}
+    {% endifnotequal %}
   </li>
   {% endfor %}
 </ul>

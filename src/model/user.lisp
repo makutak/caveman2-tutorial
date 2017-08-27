@@ -14,6 +14,7 @@
            :user-name
            :user-email
            :user-birth-date
+           :user-admin
            :user-info
            :create-user
            :update-user

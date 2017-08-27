@@ -77,7 +77,8 @@
                                                      (list :id  (object-id user)
                                                            :name (user-name user)
                                                            :email (make-md5-hexdigest
-                                                                   (user-email user))))
+                                                                   (user-email user))
+                                                           :admin (user-admin user)))
                                                  users))
                             (list :flash (flash) :type "success")))))
 
