@@ -24,9 +24,7 @@
                :sxql
                :datafly
                :mito
-
-               ;; Password hashing
-               :cl-pass
+               :mito-auth
 
                ;;CSV import
                :cl-csv)
