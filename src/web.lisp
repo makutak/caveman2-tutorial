@@ -8,6 +8,7 @@
         :caveman2-tutorial.util
         :caveman2-tutorial.model.user
         :mito
+        :mito-auth
         :sxql)
   (:import-from :lack.component
                 :call)
@@ -134,8 +135,7 @@
                              :email
                              (get-value-from-params "email" params)))
   (when login-user
-    (when (authenticate-user login-user
-                             (get-value-from-params "password" params))
+    (when (auth login-user (get-value-from-params "password" params))
       (log-in login-user)
       (flash "Welcome to the Sample App!")
       (redirect-back-or (format nil  "/users/~A" (current-user-id)))))

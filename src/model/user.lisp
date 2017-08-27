@@ -5,6 +5,7 @@
         :caveman2-tutorial.util
         :caveman2-tutorial.config
         :mito
+        :mito-auth
         :sxql
         :local-time
         :cl-csv)
@@ -26,7 +27,7 @@
            :authenticate-user))
 (in-package :caveman2-tutorial.model.user)
 
-(defclass user ()
+(defclass user (has-secure-password)
   ((name :col-type (:varchar 64)
          :initarg :name
          :accessor user-name)
@@ -35,9 +36,7 @@
           :accessor user-email)
    (birth-date :col-type (:datetime)
                :initargs :birth-date
-               :accessor user-birth-date)
-   (password :col-type (:varchar 256)
-             :initarg :password))
+               :accessor user-birth-date))
   (:metaclass mito:dao-table-class)
   (:unique-keys name email))
 
@@ -50,15 +49,14 @@
         (make-instance 'user
                        :name (get-value-from-params "name" params)
                        :email (get-value-from-params "email" params)
-                       :password (cl-pass:hash
-                                  (get-value-from-params "password" params))
+                       :password (get-value-from-params "password" params)
                        :birth-date (parse-timestring "1992-03-06")))
   (with-connection (db) (insert-dao new-user)))
 
 (defun update-user (instance params)
   (setf (slot-value instance 'name) (get-value-from-params "name" params))
   (setf (slot-value instance 'email) (get-value-from-params "email" params))
-  (setf (slot-value instance 'password) (cl-pass:hash (get-value-from-params "password" params)))
+  (setf (slot-value instance 'password) (get-value-from-params "password" params))
   (with-connection (db) (save-dao instance)))
 
 
@@ -70,12 +68,6 @@
        (valid "email" params)
        (valid "password" params)))
 
-(defun authenticate-user (user-instance input-password)
-  (let ((password-hash (slot-value user-instance 'password)))
-    (if password-hash
-        (values (cl-pass:check-password input-password password-hash) t)
-        (values nil nil))))
-
 (defun seed-user ()
   (read-csv (merge-pathnames #P"seed-user.csv" *database-directory*)
             :map-fn #'(lambda (row)
@@ -84,4 +76,4 @@
                                       :name (nth 0 row)
                                       :email (nth 1 row)
                                       :birth-date (parse-timestring (nth 2 row))
-                                      :password (cl-pass:hash "password"))))))
+                                      :password "password")))))
