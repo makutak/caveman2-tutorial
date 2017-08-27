@@ -78,9 +78,12 @@
                                                            :name (user-name user)
                                                            :email (make-md5-hexdigest
                                                                    (user-email user))
-                                                           :admin (user-admin user)))
+                                                           ))
                                                  users))
-                            (list :flash (flash) :type "success")))))
+                            (list :flash (flash) :type "success")
+                            (list :admin (if (user-admin (find-dao 'user :id (current-user-id)))
+                                             1
+                                             0))))))
 
 (defroute "/users/new" ()
   (flash "Please input infomation.")
@@ -128,6 +131,15 @@
     (flash "update success")
     (redirect (format nil "/users/~A" (current-user-id))))
   (redirect (format nil  "/users/~A/edit" (current-user-id))))
+
+(defroute  ("/users/:id/delete" :method :POST) (&key id)
+  (logged-in-user)
+  (when (admin-p)
+      (handler-case (delete-by-values 'user :id id)
+        (error (c) (on-exception *web* 404)))
+      (flash "User deleted")
+      (redirect "/users" ))
+  (redirect "/home"))
 
 (defroute "/login" ()
   (render-with-current #P"sessions/new.html"
@@ -192,6 +204,9 @@
            (format nil "~A" (current-user-id))
            (format nil "~A" id))
     (redirect "/home")))
+
+(defun admin-p ()
+  (user-admin (find-dao 'user :id (gethash :user-id *session* nil))))
 
 (defun redirect-back-or (default)
   (let ((forwarding-url (gethash :forwarding-url *session* nil)))
