@@ -70,18 +70,18 @@
                                             (1- current-page))))))
   (if (null users)
       (on-exception *web* 404)
-      (render-with-current #P"users/index.html"
-                           (append
-                            (list :next-page (1+ current-page)
-                                  :users (mapcar #'(lambda (user)
-                                                     (list :id  (object-id user)
-                                                           :name (user-name user)
-                                                           :email (make-md5-hexdigest
-                                                                   (user-email user))
-                                                           ))
-                                                 users))
-                            (list :flash (flash) :type "success")
-                            (list :admin (user-admin (find-dao 'user :id (current-user-id))))))))
+      (render-with-current
+       #P"users/index.html"
+       (append
+        (list :next-page (1+ current-page)
+              :users (mapcar #'(lambda (user)
+                                 (list :id  (object-id user)
+                                       :name (user-name user)
+                                       :email (make-md5-hexdigest
+                                               (user-email user))))
+                             users))
+        (list :flash (flash) :type "success")
+        (list :admin (user-admin (find-dao 'user :id (current-user-id))))))))
 
 (defroute "/users/new" ()
   (flash "Please input infomation.")
@@ -111,14 +111,15 @@
   (logged-in-user)
   (correct-user id)
   (setf current-user (find-dao 'user :id id))
-  (render-with-current #P"users/edit.html"
-                       (append
-                        (list :flash (flash) :type "success")
-                        (list :user (list :id (object-id current-user)
-                                          :name (user-name current-user)
-                                          :email (user-email current-user)
-                                          :hash-email (make-md5-hexdigest
-                                                       (user-email current-user)))))))
+  (render-with-current
+   #P"users/edit.html"
+   (append
+    (list :flash (flash) :type "success")
+    (list :user (list :id (object-id current-user)
+                      :name (user-name current-user)
+                      :email (user-email current-user)
+                      :hash-email (make-md5-hexdigest
+                                   (user-email current-user)))))))
 
 (defroute ("/users/:id/update" :method :POST) (&key id _parsed)
   (logged-in-user)
