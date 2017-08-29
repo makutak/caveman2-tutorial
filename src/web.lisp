@@ -171,10 +171,6 @@
   (setf user (find-dao 'user :id id))
   (render-json user))
 
-(defroute "/counter" ()
-  (format nil "You came here ~A times."
-          (incf (gethash :counter *session* 0))))
-
 ;;
 ;; Helper functions
 (defun current-user-id ()
