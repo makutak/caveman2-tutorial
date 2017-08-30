@@ -7,6 +7,7 @@
         :caveman2-tutorial.db
         :caveman2-tutorial.util
         :caveman2-tutorial.model.user
+        :caveman2-tutorial.model.micropost
         :mito
         :mito-auth
         :sxql)
@@ -100,10 +101,15 @@
 
 (defroute "/users/:id" (&key id)
   (setf u (find-dao 'user :id id))
+  (setf posts (select-dao 'micropost
+                (includes 'user)
+                (where (:= :user u))
+                (order-by (:desc :created-at))))
   (if (null u)
       (render-with-current #P"_errors/404.html")
       (render-with-current #P"users/show.html"
                            (append (user-info u)
+                                   (list :posts posts)
                                    (list :flash (flash) :type "success")))))
 
 (defroute "/users/:id/edit" (&key id)
