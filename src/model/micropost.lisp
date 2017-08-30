@@ -18,6 +18,6 @@
             :initarg :content
             :accessor user-content)
    (user :col-type user
-            :initarg :user
-            :accessor micropost-user))
+         :initarg :user
+         :accessor micropost-user))
    (:metaclass mito:dao-table-class))
