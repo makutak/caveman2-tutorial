@@ -10,7 +10,8 @@
                 :add-template-directory
                 :compile-template*
                 :render-template*
-                :*djula-execute-package*)
+                :*djula-execute-package*
+                :*current-language*)
   (:import-from :datafly
                 :encode-json)
   (:export :render
@@ -20,6 +21,7 @@
 (djula:add-template-directory *template-directory*)
 
 (defparameter *template-registry* (make-hash-table :test 'equal))
+(defparameter *current-language* :ja)
 
 (defun render (template-path &optional env)
   (let ((template (gethash template-path *template-registry*)))
