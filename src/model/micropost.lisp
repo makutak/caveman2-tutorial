@@ -20,4 +20,4 @@
    (user :col-type user
          :initarg :user
          :accessor micropost-user))
-   (:metaclass mito:dao-table-class))
+  (:metaclass mito:dao-table-class))
