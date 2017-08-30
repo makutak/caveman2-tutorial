@@ -10,7 +10,9 @@
         :local-time
         :cl-csv)
 
-  (:export :micropost))
+  (:export :micropost
+           :user-content
+           :micropost-user))
 (in-package :caveman2-tutorial.model.micropost)
 
 (defclass micropost ()
