@@ -172,7 +172,7 @@
   (setf users (retrieve-dao 'user))
   (render-json users))
 
-(defroute "/api/user/:id" (&key id)
+(defroute "/api/users/:id" (&key id)
   (setf user (find-dao 'user :id id))
   (render-json user))
 
