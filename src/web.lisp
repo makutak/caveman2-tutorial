@@ -176,6 +176,13 @@
   (setf user (find-dao 'user :id id))
   (render-json user))
 
+(defroute "/api/users/:id/posts" (&key id)
+  (setf posts (select-dao 'micropost
+                (includes 'user)
+                (where (:= :user-id id))
+                (order-by (:desc :created-at))))
+  (render-json posts))
+
 ;;
 ;; Helper functions
 (defun current-user-id ()
