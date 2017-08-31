@@ -98,7 +98,7 @@
   (setf user (find-dao 'user :id id))
   (setf posts (select-dao 'micropost
                 (includes 'user)
-                (where (:= :user u))
+                (where (:= :user user))
                 (order-by (:desc :created-at))))
   (if (null user)
       (render-with-current #P"_errors/404.html")
