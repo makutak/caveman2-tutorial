@@ -1,0 +1,15 @@
+<li id="micropost-{{ post.id }}">
+  <a href="/users/{{ user.id }}">
+    <img src="https://secure.gravatar.com/avatar/{{ user.email | md5-hexdigest }}?s=50"
+         class="gravatar">
+  </a>
+  <span class="user">
+    <a href="/users/{{ post.user.id }}">{{ post.user.name }}</a>
+  </span>
+  <span class="content">
+    {{ post.content }}
+  </span>
+  <span class="timestamp">
+    Posted {{ post.created-at | datetime }}
+  </span>
+</li>
