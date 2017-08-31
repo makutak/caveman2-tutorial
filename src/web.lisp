@@ -42,9 +42,6 @@
 (defroute "/home" ()
   (render-with-current #P"static_pages/home.html"))
 
-(defroute "/flash" ()
-  (format nil "~A" (gethash :flash *session*)))
-
 (defroute "/help" ()
   (render-with-current #P"static_pages/help.html"))
 
@@ -54,12 +51,15 @@
 (defroute "/signup" ()
   (redirect "/users/new"))
 
+;;
+;; User
+
+;; page per
 (defvar limit-number 30)
 
 (defroute "/users" (&key |page|)
   (logged-in-user)
-  (setf query (or |page|
-                  "1"))
+  (setf query (or |page| "1"))
   (handler-case (setf current-page (parse-integer query))
     (error (c) (on-exception *web* 404)))
   (if (>= 0 current-page)
@@ -72,11 +72,10 @@
   (if (null users)
       (on-exception *web* 404)
       (render-with-current #P"users/index.html"
-                           (append
-                            (list :next-page (1+ current-page)
-                                  :users users)
-                            (list :flash (flash) :type "success")
-                            (list :admin (user-admin (find-dao 'user :id (current-user-id))))))))
+                           (list :next-page (1+ current-page)
+                                 :users users
+                                 :flash (flash) :type "success"
+                                 :admin (user-admin (find-dao 'user :id (current-user-id)))))))
 
 (defroute "/users/new" ()
   (flash "Please input infomation.")
@@ -96,25 +95,24 @@
 
 (defroute "/users/:id" (&key id)
   (setf user (find-dao 'user :id id))
+  (if (null user)
+      (throw-code 404))
   (setf posts (select-dao 'micropost
                 (includes 'user)
                 (where (:= :user user))
                 (order-by (:desc :created-at))))
-  (if (null user)
-      (render-with-current #P"_errors/404.html")
-      (render-with-current #P"users/show.html"
-                           (append (list :user user)
-                                   (list :posts posts)
-                                   (list :flash (flash) :type "success")))))
+  (render-with-current #P"users/show.html"
+                       (list :user user
+                             :posts posts
+                             :flash (flash) :type "success")))
 
 (defroute "/users/:id/edit" (&key id)
   (logged-in-user)
   (correct-user id)
   (setf current-user (find-dao 'user :id id))
   (render-with-current #P"users/edit.html"
-                       (append
-                        (list :flash (flash) :type "success")
-                        (list :user current-user))))
+                       (list :flash (flash) :type "success"
+                             :user current-user)))
 
 (defroute ("/users/:id/update" :method :POST) (&key id _parsed)
   (logged-in-user)
@@ -140,6 +138,8 @@
                        (list :flash (flash)
                              :type "danger")))
 
+;;
+;; login, logout
 (defroute ("/login" :method :POST) (&key _parsed)
   (setf params (get-value-from-params "session" _parsed))
   (setf login-user (find-dao 'user
@@ -159,6 +159,9 @@
   (reset-current-user)
   (redirect "/home"))
 
+
+;;
+;; response check
 (defroute "/api/users" ()
   (setf users (retrieve-dao 'user))
   (render-json users))
