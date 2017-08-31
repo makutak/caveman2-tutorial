@@ -60,7 +60,7 @@
 
 
 ;;
-;; Custome fileter
+;; Custom fileter
 
 (djula::def-filter :md5-hexdigest (it)
   (ironclad:byte-array-to-hex-string
