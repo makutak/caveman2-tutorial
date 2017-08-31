@@ -138,6 +138,20 @@
                        (list :flash (flash)
                              :type "danger")))
 
+
+;;
+;; Micropost
+
+(defroute ("/microposts" :method :POST) (&key _parsed)
+  (logged-in-user)
+  ;;ログイン中のユーザでmicropostを作る。
+  ;;成功すればflash表示
+  ;;失敗すれば/homeに戻す。
+  (redirect "/home"))
+
+(defroute ("/microposts/:id/delete" :method :POST) (&key id)
+  (format nil "micropost delete method"))
+
 ;;
 ;; login, logout
 (defroute ("/login" :method :POST) (&key _parsed)
