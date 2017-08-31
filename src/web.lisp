@@ -74,12 +74,7 @@
       (render-with-current #P"users/index.html"
                            (append
                             (list :next-page (1+ current-page)
-                                  :users (mapcar #'(lambda (user)
-                                                     (list :id  (object-id user)
-                                                           :name (user-name user)
-                                                           :email (make-md5-hexdigest
-                                                                   (user-email user))))
-                                                 users))
+                                  :users users)
                             (list :flash (flash) :type "success")
                             (list :admin (user-admin (find-dao 'user :id (current-user-id))))))))
 
@@ -100,15 +95,15 @@
   (redirect "/users/new"))
 
 (defroute "/users/:id" (&key id)
-  (setf u (find-dao 'user :id id))
+  (setf user (find-dao 'user :id id))
   (setf posts (select-dao 'micropost
                 (includes 'user)
                 (where (:= :user u))
                 (order-by (:desc :created-at))))
-  (if (null u)
+  (if (null user)
       (render-with-current #P"_errors/404.html")
       (render-with-current #P"users/show.html"
-                           (append (user-info u)
+                           (append (list :user user)
                                    (list :posts posts)
                                    (list :flash (flash) :type "success")))))
 
@@ -119,11 +114,7 @@
   (render-with-current #P"users/edit.html"
                        (append
                         (list :flash (flash) :type "success")
-                        (list :user (list :id (object-id current-user)
-                                          :name (user-name current-user)
-                                          :email (user-email current-user)
-                                          :hash-email (make-md5-hexdigest
-                                                       (user-email current-user)))))))
+                        (list :user current-user))))
 
 (defroute ("/users/:id/update" :method :POST) (&key id _parsed)
   (logged-in-user)

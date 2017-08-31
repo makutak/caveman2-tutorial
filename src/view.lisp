@@ -48,6 +48,20 @@
                 :developmentp
                 :productionp)
   (:import-from :caveman2
-                :url-for))
+                :url-for)
+  (:import-from :ironclad
+                :byte-array-to-hex-string)
+  (:import-from :ironclad
+                :digest-sequence)
+  (:import-from :ironclad
+                :ascii-string-to-byte-array))
 
 (setf djula:*djula-execute-package* (find-package :caveman2-tutorial.djula))
+
+
+;;
+;; Custome fileter
+
+(djula::def-filter :md5-hexdigest (it)
+  (ironclad:byte-array-to-hex-string
+   (ironclad:digest-sequence :md5 (ironclad:ascii-string-to-byte-array it))))
