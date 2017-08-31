@@ -14,7 +14,7 @@
   <div class="col-md-8">
     {% if posts %}
     <h3>Microposts({{ posts | length }})</h3>
-    {% for post in posts%}
+    {% for post in posts %}
     <ol class="microposts">
       {% include "microposts/micropost.html" %}
     </ol>
