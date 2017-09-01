@@ -148,11 +148,8 @@
 ;;
 ;; Micropost
 
-(defroute ("/microposts" :method :POST) (&key _parsed)
+(defroute ("/microposts/create" :method :POST) (&key _parsed)
   (logged-in-user)
-  ;;ログイン中のユーザでmicropostを作る。
-  ;;成功すればflash表示
-  ;;失敗すれば/homeに戻す。
   (redirect "/home"))
 
 (defroute ("/microposts/:id/delete" :method :POST) (&key id)
