@@ -1,0 +1,12 @@
+<a href="/users/{{ current-user.id }}">
+  <img src="https://secure.gravatar.com/avatar/{{ current-user.email | md5-hexdigest }}?s=52" class="gravatar">
+</a>
+<h1>
+  {{ current-user.name }}
+</h1>
+<span>
+  <a href="/users/{{ current-user.id }}"> view my profile</a>
+</span>
+<span>
+  {{ posts | length }} microposts
+</span>
