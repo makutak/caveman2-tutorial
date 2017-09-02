@@ -46,7 +46,8 @@
                                  :posts (select-dao 'micropost
                                           (includes 'user)
                                           (where (:= :user-id (current-user-id)))
-                                          (order-by (:desc :created-at)))))))
+                                          (order-by (:desc :created-at)))
+                                 :flash (flash) :type"success"))))
 
 (defroute "/help" ()
   (render-with-current #P"static_pages/help.html"))
@@ -150,6 +151,13 @@
 
 (defroute ("/microposts/create" :method :POST) (&key _parsed)
   (logged-in-user)
+  (setf params (get-value-from-params "micropost" _parsed))
+  (setf post (make-instance 'micropost
+                             :content (get-value-from-params "content" params)
+                             :user (find-dao 'user :id (current-user-id))))
+  (handler-case (insert-dao post)
+    (error (c) (redirect "/home")))
+  (flash "Micropost created!")
   (redirect "/home"))
 
 (defroute ("/microposts/:id/delete" :method :POST) (&key id)
