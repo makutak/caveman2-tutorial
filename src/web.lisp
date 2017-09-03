@@ -141,12 +141,6 @@
       (redirect "/users" ))
   (redirect "/home"))
 
-(defroute "/login" ()
-  (render-with-current #P"sessions/new.html"
-                       (list :flash (flash)
-                             :type "danger")))
-
-
 ;;
 ;; Micropost
 
@@ -166,6 +160,12 @@
 
 ;;
 ;; login, logout
+
+(defroute "/login" ()
+  (render-with-current #P"sessions/new.html"
+                       (list :flash (flash)
+                             :type "danger")))
+
 (defroute ("/login" :method :POST) (&key _parsed)
   (setf params (get-value-from-params "session" _parsed))
   (setf login-user (find-dao 'user
