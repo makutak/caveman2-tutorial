@@ -18,7 +18,7 @@
 (defclass micropost ()
   ((content :col-type :text
             :initarg :content
-            :accessor user-content)
+            :accessor micropost-content)
    (user :col-type user
          :initarg :user
          :accessor micropost-user))
