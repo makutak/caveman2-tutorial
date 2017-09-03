@@ -10,7 +10,7 @@
     {{ post.content }}
   </span>
   <span class="timestamp">
-    Posted {{ post.created-at | datetime }}
+    Posted {{ post.created-at | time-ago-in-words }} ago.
     {% ifequal current post.user.id %}
     <a href="/microposts/{{ post.id }}/delete"
        data-confirm="You sure?"

@@ -27,7 +27,11 @@
                :mito-auth
 
                ;;CSV import
-               :cl-csv)
+               :cl-csv
+
+               ;; for datetime
+               :local-time
+               :local-time-duration)
   :components ((:module "src"
                 :components
                 ((:file "main" :depends-on ("config" "view" "db" "model"))

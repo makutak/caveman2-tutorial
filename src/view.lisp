@@ -54,7 +54,12 @@
   (:import-from :ironclad
                 :digest-sequence)
   (:import-from :ironclad
-                :ascii-string-to-byte-array))
+                :ascii-string-to-byte-array)
+  (:import-from :local-time
+                :now)
+  (:import-from :local-time-duration
+                :human-readable-duration
+                :timestamp-difference))
 
 (setf djula:*djula-execute-package* (find-package :caveman2-tutorial.djula))
 
@@ -65,3 +70,10 @@
 (djula::def-filter :md5-hexdigest (it)
   (ironclad:byte-array-to-hex-string
    (ironclad:digest-sequence :md5 (ironclad:ascii-string-to-byte-array it))))
+
+(djula::def-filter :time-ago-in-words (it)
+  (local-time-duration:human-readable-duration
+   (local-time-duration:timestamp-difference
+    (local-time-duration:timestamp-duration+
+            (local-time:now)
+            (local-time-duration:duration :hour 9)) it)))
