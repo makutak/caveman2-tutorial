@@ -43,10 +43,11 @@
   (render-with-current #P"static_pages/home.html"
                        (if (logged-in-p)
                            (list :current-user (find-dao 'user :id (current-user-id))
-                                 :posts (select-dao 'micropost
-                                          (includes 'user)
-                                          (where (:= :user-id (current-user-id)))
-                                          (order-by (:desc :created-at)))
+                                 :posts (count-dao 'micropost :user-id (current-user-id))
+                                 :feed-items (select-dao 'micropost
+                                               (includes 'user)
+                                               (where (:= :user-id (current-user-id)))
+                                               (order-by (:desc :created-at)))
                                  :flash (flash) :type"success"))))
 
 (defroute "/help" ()

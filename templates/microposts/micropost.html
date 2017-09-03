@@ -1,6 +1,6 @@
 <li id="micropost-{{ post.id }}">
-  <a href="/users/{{ user.id }}">
-    <img src="https://secure.gravatar.com/avatar/{{ user.email | md5-hexdigest }}?s=50"
+  <a href="/users/{{ post.user.id }}">
+    <img src="https://secure.gravatar.com/avatar/{{ post.user.email | md5-hexdigest }}?s=50"
          class="gravatar">
   </a>
   <span class="user">
