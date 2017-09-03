@@ -11,5 +11,10 @@
   </span>
   <span class="timestamp">
     Posted {{ post.created-at | datetime }}
+    {% ifequal current post.user.id %}
+    <a href="/microposts/{{ post.id }}/delete"
+       data-confirm="You sure?"
+       data-method="delete">delete</a>
+    {% endifequal %}
   </span>
 </li>

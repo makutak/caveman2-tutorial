@@ -156,7 +156,12 @@
   (redirect "/home"))
 
 (defroute ("/microposts/:id/delete" :method :POST) (&key id)
-  (format nil "micropost delete method"))
+  (logged-in-user)
+  (setf post (find-dao 'micropost :id id))
+  (when (equal (current-user-id) (object-id (micropost-user post)))
+    (delete-dao post)
+    (flash "Micropost deleted"))
+  (redirect "/home"))
 
 ;;
 ;; login, logout
