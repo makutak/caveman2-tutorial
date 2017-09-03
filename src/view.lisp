@@ -10,7 +10,8 @@
                 :add-template-directory
                 :compile-template*
                 :render-template*
-                :*djula-execute-package*)
+                :*djula-execute-package*
+                :*current-language*)
   (:import-from :datafly
                 :encode-json)
   (:export :render
@@ -20,6 +21,7 @@
 (djula:add-template-directory *template-directory*)
 
 (defparameter *template-registry* (make-hash-table :test 'equal))
+(defparameter *current-language* :ja)
 
 (defun render (template-path &optional env)
   (let ((template (gethash template-path *template-registry*)))
@@ -46,6 +48,32 @@
                 :developmentp
                 :productionp)
   (:import-from :caveman2
-                :url-for))
+                :url-for)
+  (:import-from :ironclad
+                :byte-array-to-hex-string)
+  (:import-from :ironclad
+                :digest-sequence)
+  (:import-from :ironclad
+                :ascii-string-to-byte-array)
+  (:import-from :local-time
+                :now)
+  (:import-from :local-time-duration
+                :human-readable-duration
+                :timestamp-difference))
 
 (setf djula:*djula-execute-package* (find-package :caveman2-tutorial.djula))
+
+
+;;
+;; Custom fileter
+
+(djula::def-filter :md5-hexdigest (it)
+  (ironclad:byte-array-to-hex-string
+   (ironclad:digest-sequence :md5 (ironclad:ascii-string-to-byte-array it))))
+
+(djula::def-filter :time-ago-in-words (it)
+  (local-time-duration:human-readable-duration
+   (local-time-duration:timestamp-difference
+    (local-time-duration:timestamp-duration+
+     (local-time:now) (local-time-duration:duration :hour 9))
+    it)))

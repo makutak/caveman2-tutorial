@@ -1,0 +1,20 @@
+<li id="micropost-{{ post.id }}">
+  <a href="/users/{{ post.user.id }}">
+    <img src="https://secure.gravatar.com/avatar/{{ post.user.email | md5-hexdigest }}?s=50"
+         class="gravatar">
+  </a>
+  <span class="user">
+    <a href="/users/{{ post.user.id }}">{{ post.user.name }}</a>
+  </span>
+  <span class="content">
+    {{ post.content }}
+  </span>
+  <span class="timestamp">
+    Posted {{ post.created-at | time-ago-in-words }} ago.
+    {% ifequal current post.user.id %}
+    <a href="/microposts/{{ post.id }}/delete"
+       data-confirm="You sure?"
+       data-method="delete">delete</a>
+    {% endifequal %}
+  </span>
+</li>

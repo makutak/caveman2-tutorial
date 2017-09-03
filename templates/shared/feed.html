@@ -1,0 +1,7 @@
+{% if feed-items %}
+<ol class="microposts">
+{% for post in feed-items %}
+  {% include "microposts/micropost.html" %}
+{% endfor %}
+</ol>
+{% endif %}

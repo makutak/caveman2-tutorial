@@ -7,6 +7,7 @@
         :caveman2-tutorial.db
         :caveman2-tutorial.util
         :caveman2-tutorial.model.user
+        :caveman2-tutorial.model.micropost
         :mito
         :mito-auth
         :sxql)
@@ -39,10 +40,15 @@
   (redirect "/home"))
 
 (defroute "/home" ()
-  (render-with-current #P"static_pages/home.html"))
-
-(defroute "/flash" ()
-  (format nil "~A" (gethash :flash *session*)))
+  (render-with-current #P"static_pages/home.html"
+                       (if (logged-in-p)
+                           (list :current-user (find-dao 'user :id (current-user-id))
+                                 :posts (count-dao 'micropost :user-id (current-user-id))
+                                 :feed-items (select-dao 'micropost
+                                               (includes 'user)
+                                               (where (:= :user-id (current-user-id)))
+                                               (order-by (:desc :created-at)))
+                                 :flash (flash) :type"success"))))
 
 (defroute "/help" ()
   (render-with-current #P"static_pages/help.html"))
@@ -53,12 +59,15 @@
 (defroute "/signup" ()
   (redirect "/users/new"))
 
+;;
+;; User
+;;
+;; page per
 (defvar limit-number 30)
 
 (defroute "/users" (&key |page|)
   (logged-in-user)
-  (setf query (or |page|
-                  "1"))
+  (setf query (or |page| "1"))
   (handler-case (setf current-page (parse-integer query))
     (error (c) (on-exception *web* 404)))
   (if (>= 0 current-page)
@@ -70,18 +79,11 @@
                                             (1- current-page))))))
   (if (null users)
       (on-exception *web* 404)
-      (render-with-current
-       #P"users/index.html"
-       (append
-        (list :next-page (1+ current-page)
-              :users (mapcar #'(lambda (user)
-                                 (list :id  (object-id user)
-                                       :name (user-name user)
-                                       :email (make-md5-hexdigest
-                                               (user-email user))))
-                             users))
-        (list :flash (flash) :type "success")
-        (list :admin (user-admin (find-dao 'user :id (current-user-id))))))))
+      (render-with-current #P"users/index.html"
+                           (list :next-page (1+ current-page)
+                                 :users users
+                                 :flash (flash) :type "success"
+                                 :admin (user-admin (find-dao 'user :id (current-user-id)))))))
 
 (defroute "/users/new" ()
   (flash "Please input infomation.")
@@ -100,26 +102,25 @@
   (redirect "/users/new"))
 
 (defroute "/users/:id" (&key id)
-  (setf u (find-dao 'user :id id))
-  (if (null u)
-      (render-with-current #P"_errors/404.html")
-      (render-with-current #P"users/show.html"
-                           (append (user-info u)
-                                   (list :flash (flash) :type "success")))))
+  (setf user (find-dao 'user :id id))
+  (if (null user)
+      (throw-code 404))
+  (setf posts (select-dao 'micropost
+                (includes 'user)
+                (where (:= :user user))
+                (order-by (:desc :created-at))))
+  (render-with-current #P"users/show.html"
+                       (list :user user
+                             :posts posts
+                             :flash (flash) :type "success")))
 
 (defroute "/users/:id/edit" (&key id)
   (logged-in-user)
   (correct-user id)
   (setf current-user (find-dao 'user :id id))
-  (render-with-current
-   #P"users/edit.html"
-   (append
-    (list :flash (flash) :type "success")
-    (list :user (list :id (object-id current-user)
-                      :name (user-name current-user)
-                      :email (user-email current-user)
-                      :hash-email (make-md5-hexdigest
-                                   (user-email current-user)))))))
+  (render-with-current #P"users/edit.html"
+                       (list :flash (flash) :type "success"
+                             :user current-user)))
 
 (defroute ("/users/:id/update" :method :POST) (&key id _parsed)
   (logged-in-user)
@@ -139,6 +140,31 @@
       (flash "User deleted")
       (redirect "/users" ))
   (redirect "/home"))
+
+;;
+;; Micropost
+
+(defroute ("/microposts/create" :method :POST) (&key _parsed)
+  (logged-in-user)
+  (setf params (get-value-from-params "micropost" _parsed))
+  (setf post (make-instance 'micropost
+                             :content (get-value-from-params "content" params)
+                             :user (find-dao 'user :id (current-user-id))))
+  (handler-case (insert-dao post)
+    (error (c) (redirect "/home")))
+  (flash "Micropost created!")
+  (redirect "/home"))
+
+(defroute ("/microposts/:id/delete" :method :POST) (&key id)
+  (logged-in-user)
+  (setf post (find-dao 'micropost :id id))
+  (when (equal (current-user-id) (object-id (micropost-user post)))
+    (delete-dao post)
+    (flash "Micropost deleted"))
+  (redirect "/home"))
+
+;;
+;; login, logout
 
 (defroute "/login" ()
   (render-with-current #P"sessions/new.html"
@@ -164,13 +190,23 @@
   (reset-current-user)
   (redirect "/home"))
 
+
+;;
+;; response check
 (defroute "/api/users" ()
   (setf users (retrieve-dao 'user))
   (render-json users))
 
-(defroute "/api/user/:id" (&key id)
+(defroute "/api/users/:id" (&key id)
   (setf user (find-dao 'user :id id))
   (render-json user))
+
+(defroute "/api/users/:id/posts" (&key id)
+  (setf posts (select-dao 'micropost
+                (includes 'user)
+                (where (:= :user-id id))
+                (order-by (:desc :created-at))))
+  (render-json posts))
 
 ;;
 ;; Helper functions
