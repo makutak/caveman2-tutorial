@@ -6,7 +6,7 @@
 <ul class="users">
   {% for user in users %}
   <li>
-    <img src="https://secure.gravatar.com/avatar/{{ user.email }}?s=50"
+    <img src="https://secure.gravatar.com/avatar/{{ user.email | md5-hexdigest }}?s=50"
          class="gravatar">
     <a href="/users/{{ user.id }}">{{ user.name }}</a>
     {% ifnotequal current user.id %}

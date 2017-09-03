@@ -1,13 +1,29 @@
 {% extends "layouts/default.html" %}
-{% block title %}Welcome to Caveman2{% endblock %}
+{% block title %}Sample App{% endblock %}
 {% block content %}
+{% if current %}
+<div class="row">
+  <aside class="col-md-4">
+    <section class="user_info">
+      {% include "shared/user_info.html" %}
+    </section>
+    <section class="micropost_form">
+      {% include "shared/micropost_form.html" %}
+    </section>
+  </aside>
+  <div class="col-md-8">
+    <h3>Micropost Feed</h3>
+    {% include "shared/feed.html" %}
+  </div>
+</div>
+{% else %}
 <div class="center jumbotron">
   <h1>Welcome to the Sample App</h1>
   <h2>This is the home page for the
     <a href="http://railstutorial.jp/">Ruby on Rails Tutorial</a>
     sample application.
   </h2>
-    <h2>But this application built on
+  <h2>But this application built on
     <a href="https://github.com/fukamachi/caveman">Caveman2</a>.
   </h2>
 
@@ -17,4 +33,5 @@
   <img src="images/rails.png" alt="Rails logo">
 </a>
 <img src="images/lisp.png">
+{% endif %}
 {% endblock %}

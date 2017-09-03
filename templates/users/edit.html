@@ -32,7 +32,7 @@
 
       <br>
       <div class="gravatar_edit">
-        <img src="https://secure.gravatar.com/avatar/{{ user.hash-email }}"
+        <img src="https://secure.gravatar.com/avatar/{{ user.email | md5-hexdigest }}"
              class="gravatar">
         <a href="http://gravatar.com/emails" target="_blank">change</a>
       </div>

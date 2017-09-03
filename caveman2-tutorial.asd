@@ -27,7 +27,11 @@
                :mito-auth
 
                ;;CSV import
-               :cl-csv)
+               :cl-csv
+
+               ;; for datetime
+               :local-time
+               :local-time-duration)
   :components ((:module "src"
                 :components
                 ((:file "main" :depends-on ("config" "view" "db" "model"))
@@ -39,7 +43,8 @@
                  (:module "model"
                   :depends-on ("db" "util")
                   :components
-                  ((:file  "user"))))))
+                  ((:file "user")
+                   (:file "micropost" :depends-on (:user)))))))
 
   :description ""
   :in-order-to ((test-op (load-op caveman2-tutorial-test))))

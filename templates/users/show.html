@@ -1,14 +1,25 @@
 {% extends "layouts/default.html" %}
 {% block title %} {{ user.name }} {% endblock %}
 {% block content %}
-  <div class="row">
-    <aside class="col-md-4">
-      <section class="user_info">
-        <h1>
-          <img src="https://secure.gravatar.com/avatar/{{ user.email }}" class="gravatar">
-          {{ user.name }}
-        </h1>
-      </section>
-    </aside>
+<div class="row">
+  <aside class="col-md-4">
+    <section class="user_info">
+      <h1>
+        <img src="https://secure.gravatar.com/avatar/{{ user.email | md5-hexdigest }}"
+             class="gravatar">
+        {{ user.name }}
+      </h1>
+    </section>
+  </aside>
+  <div class="col-md-8">
+    {% if posts %}
+    <h3>Microposts({{ posts | length }})</h3>
+    <ol class="microposts">
+    {% for post in posts %}
+      {% include "microposts/micropost.html" %}
+    {% endfor %}
+    </ol>
+    {% endif %}
   </div>
+</div>
 {% endblock %}
