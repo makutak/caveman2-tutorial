@@ -74,11 +74,11 @@
 (djula::def-filter :time-ago-in-words (it)
   (local-time-duration:human-readable-duration
    (local-time-duration:timestamp-difference
-    (truncation-nsec
+    (truncate-nsec
      (local-time-duration:timestamp-duration+
       (local-time:now)
       (local-time-duration:duration :hour 9)))
-    (truncation-nsec it))))
+    (truncate-nsec it))))
 
 (defun truncate-nsec (timestamp)
   (local-time:unix-to-timestamp
