@@ -31,7 +31,9 @@
 
                ;; for datetime
                :local-time
-               :local-time-duration)
+               :local-time-duration
+
+               :split-sequence)
   :components ((:module "src"
                 :components
                 ((:file "main" :depends-on ("config" "view" "db" "model"))

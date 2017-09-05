@@ -72,13 +72,23 @@
    (ironclad:digest-sequence :md5 (ironclad:ascii-string-to-byte-array it))))
 
 (djula::def-filter :time-ago-in-words (it)
+  (distance-of-time it))
+
+
+(defun distance-of-time (from-time)
+  (let ((distance (split-sequence:split-sequence #\Space (time-duration from-time))))
+    (if (equal (first distance) "0")
+        "Just Now."
+        (format nil "~A ~A ago." (second distance) (third distance)))))
+
+(defun time-duration (from-time)
   (local-time-duration:human-readable-duration
    (local-time-duration:timestamp-difference
     (truncate-nsec
      (local-time-duration:timestamp-duration+
       (local-time:now)
       (local-time-duration:duration :hour 9)))
-    (truncate-nsec it))))
+    (truncate-nsec from-time))))
 
 (defun truncate-nsec (timestamp)
   (local-time:unix-to-timestamp
