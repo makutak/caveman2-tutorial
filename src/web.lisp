@@ -208,49 +208,6 @@
                 (order-by (:desc :created-at))))
   (render-json posts))
 
-;;
-;; Helper functions
-(defun current-user-id ()
-  (gethash :user-id *session* nil))
-
-(defun reset-current-user ()
-  (remhash :user-id *session*))
-
-(defun log-in (user)
-  (reset-current-user)
-  (setf (gethash :user-id *session*) (object-id user)))
-
-(defun logged-in-p ()
-  (not (null (current-user-id))))
-
-(defun logged-in-user ()
-  (unless (logged-in-p)
-    (progn
-      (store-location)
-      (flash "Please login.")
-      (redirect "/login"))))
-
-(defun correct-user (id)
-  (unless (equal
-           (format nil "~A" (current-user-id))
-           (format nil "~A" id))
-    (redirect "/home")))
-
-(defun admin-p ()
-  (user-admin (find-dao 'user :id (gethash :user-id *session* nil))))
-
-(defun redirect-back-or (default)
-  (let ((forwarding-url (gethash :forwarding-url *session* nil)))
-    (remhash :forwarding-url *session*)
-    (redirect
-     (or forwarding-url
-         default))))
-
-(defun store-location ()
-  (if (equal "GET" (format nil "~A" (request-method *request*)))
-      (setf (gethash :forwarding-url *session*)
-            (request-path-info *request*))))
-;;
 ;; Error pages
 
 (defmethod on-exception ((app <web>) (code (eql 404)))
