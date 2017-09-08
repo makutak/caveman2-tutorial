@@ -55,7 +55,7 @@
 (defun update-user (instance params)
   (setf (slot-value instance 'name) (get-value-from-params "name" params))
   (setf (slot-value instance 'email) (get-value-from-params "email" params))
-  ;;(setf (slot-value instance 'password) (get-value-from-params "password" params))
+  (setf (password instance) (get-value-from-params "password" params))
   (with-connection (db) (save-dao instance)))
 
 
