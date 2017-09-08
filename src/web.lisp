@@ -132,7 +132,7 @@
     (redirect (format nil "/users/~A" (current-user-id))))
   (redirect (format nil  "/users/~A/edit" (current-user-id))))
 
-(defroute  ("/users/:id/delete" :method :POST) (&key id)
+(defroute  ("/users/:id/delete" :method :DELETE) (&key id)
   (logged-in-user)
   (when (admin-p)
       (handler-case (delete-by-values 'user :id id)
@@ -155,7 +155,7 @@
   (flash "Micropost created!")
   (redirect "/home"))
 
-(defroute ("/microposts/:id/delete" :method :POST) (&key id)
+(defroute ("/microposts/:id/delete" :method :DELETE) (&key id)
   (logged-in-user)
   (setf post (find-dao 'micropost :id id))
   (when (equal (current-user-id) (object-id (micropost-user post)))
@@ -186,7 +186,7 @@
                        (list :flash (flash)
                              :type "danger")))
 
-(defroute ("/logout" :method :POST) ()
+(defroute ("/logout" :method :DELETE) ()
   (reset-current-user)
   (redirect "/home"))
 
