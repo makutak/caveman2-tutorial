@@ -46,7 +46,8 @@
                   :depends-on ("db" "util")
                   :components
                   ((:file "user")
-                   (:file "micropost" :depends-on (:user)))))))
+                   (:file "micropost" :depends-on (:user))
+                   (:file "relationship" :depends-on (:user)))))))
 
   :description ""
   :in-order-to ((test-op (load-op caveman2-tutorial-test))))
