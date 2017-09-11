@@ -44,7 +44,7 @@
   (setf (gethash :user-id *session*) (object-id user)))
 
 (defun logged-in-p ()
-  (not (null (current-user-id))))
+  (current-user-id))
 
 (defun logged-in-user ()
   (unless (logged-in-p)
