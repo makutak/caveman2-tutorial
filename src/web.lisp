@@ -42,10 +42,10 @@
 (defvar limit-number 30)
 
 ;;
-;; Paging
+;; Pagination
 
-(defmacro paging (model current-page)
-    `(select-dao ',model
+(defmacro paginate (model current-page)
+    `(select-dao ,model
        (limit limit-number)
        (offset (* limit-number (if (= ,current-page 1)
                                    0
@@ -84,7 +84,7 @@
     (error (c) (on-exception *web* 404)))
   (if (>= 0 current-page)
       (throw-code 404))
-  (setf users (paging user current-page))
+  (setf users (paginate 'user current-page))
   (if (null users)
       (on-exception *web* 404)
       (render-with-current #P"users/index.html"
