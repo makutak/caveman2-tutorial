@@ -36,6 +36,21 @@
   (render template-path (append args (list :current
                                            (current-user-id)))))
 
+;;
+;; 1 page limit
+
+(defvar limit-number 30)
+
+;;
+;; Paging
+
+(defmacro paging (model current-page)
+    `(select-dao ',model
+       (limit limit-number)
+       (offset (* limit-number (if (= ,current-page 1)
+                                   0
+                                   (1- ,current-page))))))
+
 (defroute "/" ()
   (redirect "/home"))
 
@@ -61,9 +76,6 @@
 
 ;;
 ;; User
-;;
-;; page per
-(defvar limit-number 30)
 
 (defroute "/users" (&key |page|)
   (logged-in-user)
@@ -72,11 +84,7 @@
     (error (c) (on-exception *web* 404)))
   (if (>= 0 current-page)
       (throw-code 404))
-  (setf users (select-dao 'user
-                (limit limit-number)
-                (offset (* limit-number (if (= current-page 1)
-                                            0
-                                            (1- current-page))))))
+  (setf users (paging user current-page))
   (if (null users)
       (on-exception *web* 404)
       (render-with-current #P"users/index.html"
