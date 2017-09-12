@@ -52,6 +52,16 @@
                                  0
                                  (1- ,current-page))))))
 
+(defun parse-query (query)
+  (handler-case (setf page (parse-integer query))
+    (error (c) (on-exception *web* 404)))
+  (if (>= 0 page)
+      (throw-code 404))
+  page)
+
+;;
+;; static pages
+
 (defroute "/" ()
   (redirect "/home"))
 
@@ -80,11 +90,7 @@
 
 (defroute "/users" (&key |page|)
   (logged-in-user)
-  (setf query (or |page| "1"))
-  (handler-case (setf current-page (parse-integer query))
-    (error (c) (on-exception *web* 404)))
-  (if (>= 0 current-page)
-      (throw-code 404))
+  (setf current-page (parse-query (or |page| "1")))
   (setf users (paginate 'user current-page))
   (if (null users)
       (on-exception *web* 404)
