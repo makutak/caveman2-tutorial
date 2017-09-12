@@ -44,12 +44,13 @@
 ;;
 ;; Pagination
 
-(defmacro paginate (model current-page)
-    `(select-dao ,model
-       (limit limit-number)
-       (offset (* limit-number (if (= ,current-page 1)
-                                   0
-                                   (1- ,current-page))))))
+(defmacro paginate (model current-page &body body)
+  `(select-dao ,model
+     ,@body
+     (limit limit-number)
+     (offset (* limit-number (if (= ,current-page 1)
+                                 0
+                                 (1- ,current-page))))))
 
 (defroute "/" ()
   (redirect "/home"))
