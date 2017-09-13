@@ -13,12 +13,14 @@
   </aside>
   <div class="col-md-8">
     {% if posts %}
-    <h3>Microposts({{ posts | length }})</h3>
-    <ol class="microposts">
+    <h3>Microposts({{ total-posts }})</h3>
+    <ol class="microposts" id="user-microposts">
     {% for post in posts %}
       {% include "microposts/micropost.html" %}
     {% endfor %}
     </ol>
+    <a class="page-link"
+       href="/users/{{ user.id }}?page={{ next-page }}">>Next</a>
     {% endif %}
   </div>
 </div>

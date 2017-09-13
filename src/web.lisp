@@ -117,18 +117,25 @@
     (redirect-back-or (format nil "/users/~A" (current-user-id))))
   (redirect "/users/new"))
 
-(defroute "/users/:id" (&key id)
+(defroute "/users/:id" (&key id |page|)
+  (princ |page|)
   (setf user (find-dao 'user :id id))
   (if (null user)
       (throw-code 404))
-  (setf posts (select-dao 'micropost
+  (setf current-page (parse-query (or |page| "1")))
+  (setf posts (paginate 'micropost current-page
                 (includes 'user)
                 (where (:= :user user))
                 (order-by (:desc :created-at))))
-  (render-with-current #P"users/show.html"
-                       (list :user user
-                             :posts posts
-                             :flash (flash) :type "success")))
+  (setf total-posts (count-dao 'micropost :user-id (object-id user)))
+  (if (null posts)
+      (on-exception *web* 404)
+      (render-with-current #P"users/show.html"
+                           (list :next-page (1+ current-page)
+                                 :user user
+                                 :total-posts total-posts
+                                 :posts posts
+                                 :flash (flash) :type "success"))))
 
 (defroute "/users/:id/edit" (&key id)
   (logged-in-user)
