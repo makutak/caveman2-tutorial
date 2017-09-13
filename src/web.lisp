@@ -36,6 +36,32 @@
   (render template-path (append args (list :current
                                            (current-user-id)))))
 
+;;
+;; 1 page limit
+
+(defvar limit-number 30)
+
+;;
+;; Pagination
+
+(defmacro paginate (model current-page &body body)
+  `(select-dao ,model
+     ,@body
+     (limit limit-number)
+     (offset (* limit-number (if (= ,current-page 1)
+                                 0
+                                 (1- ,current-page))))))
+
+(defun parse-query (query)
+  (handler-case (setf page (parse-integer query))
+    (error (c) (on-exception *web* 404)))
+  (if (>= 0 page)
+      (throw-code 404))
+  page)
+
+;;
+;; static pages
+
 (defroute "/" ()
   (redirect "/home"))
 
@@ -61,22 +87,11 @@
 
 ;;
 ;; User
-;;
-;; page per
-(defvar limit-number 30)
 
 (defroute "/users" (&key |page|)
   (logged-in-user)
-  (setf query (or |page| "1"))
-  (handler-case (setf current-page (parse-integer query))
-    (error (c) (on-exception *web* 404)))
-  (if (>= 0 current-page)
-      (throw-code 404))
-  (setf users (select-dao 'user
-                (limit limit-number)
-                (offset (* limit-number (if (= current-page 1)
-                                            0
-                                            (1- current-page))))))
+  (setf current-page (parse-query (or |page| "1")))
+  (setf users (paginate 'user current-page))
   (if (null users)
       (on-exception *web* 404)
       (render-with-current #P"users/index.html"
