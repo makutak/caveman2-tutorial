@@ -129,14 +129,12 @@
                 (where (:= :user-id (object-id user)))
                 (order-by (:desc :created-at))))
   (setf total-posts (count-dao 'micropost :user-id (object-id user)))
-  (if (null posts)
-      (on-exception *web* 404)
-      (render-with-current #P"users/show.html"
-                           (list :next-page (1+ current-page)
-                                 :user user
-                                 :total-posts total-posts
-                                 :posts posts
-                                 :flash (flash) :type "success"))))
+  (render-with-current #P"users/show.html"
+                       (list :next-page (1+ current-page)
+                             :user user
+                             :total-posts total-posts
+                             :posts posts
+                             :flash (flash) :type "success")))
 
 (defroute "/users/:id/edit" (&key id)
   (logged-in-user)
