@@ -37,12 +37,13 @@
                                            (current-user-id)))))
 
 ;;
+;; Pagination
+
+;;
 ;; 1 page limit
 
 (defvar limit-number 30)
 
-;;
-;; Pagination
 
 (defmacro paginate (model current-page &body body)
   `(select-dao ,model
@@ -125,7 +126,7 @@
   (setf current-page (parse-query (or |page| "1")))
   (setf posts (paginate 'micropost current-page
                 (includes 'user)
-                (where (:= :user user))
+                (where (:= :user-id (object-id user)))
                 (order-by (:desc :created-at))))
   (setf total-posts (count-dao 'micropost :user-id (object-id user)))
   (if (null posts)
