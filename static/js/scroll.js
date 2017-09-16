@@ -13,3 +13,11 @@ $('#user-microposts').infiniteScroll({
   history: false,
   debug: true
 });
+
+$('#feed').infiniteScroll({
+  // options
+  path: '.page-link',
+  append: '#feed li',
+  history: false,
+  debug: true
+});
