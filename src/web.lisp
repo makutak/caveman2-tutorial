@@ -63,10 +63,12 @@
 ;;
 ;; static pages
 
-(defroute "/" ()
+@route GET "/"
+(defun root ()
   (redirect "/home"))
 
-(defroute "/home" (&key |page|)
+@route GET "/home"
+(defun home-page (&key |page|)
   (render-with-current
    #P"static_pages/home.html"
    (when (logged-in-p)
@@ -80,19 +82,23 @@
            :next-page (1+ current-page)
            :flash (flash) :type"success"))))
 
-(defroute "/help" ()
+@route GET "/help"
+(defun help-page ()
   (render-with-current #P"static_pages/help.html"))
 
-(defroute "/about" ()
+@route GET "/about"
+(defun about-page ()
   (render-with-current #P"static_pages/about.html"))
 
-(defroute "/signup" ()
+@route GET "/signup"
+(defun sign-up-page  ()
   (redirect "/users/new"))
 
 ;;
 ;; User
 
-(defroute "/users" (&key |page|)
+@route GET "/users"
+(defun users-index-page  (&key |page|)
   (logged-in-user)
   (setf current-page (parse-query (or |page| "1")))
   (setf users (paginate 'user current-page))
@@ -104,13 +110,15 @@
                                  :flash (flash) :type "success"
                                  :admin (user-admin (find-dao 'user :id (current-user-id)))))))
 
-(defroute "/users/new" ()
+@route GET "/users/new"
+(defun users-new-page  ()
   (flash "Please input infomation.")
   (render-with-current #P"users/new.html"
                        (list :flash (flash)
                              :type "info")))
 
-(defroute ("/users/create" :method :POST) (&key _parsed)
+@route POST "/users/create"
+(defun users-create (&key _parsed)
   (setf params (get-value-from-params "user" _parsed))
   (when (valid-user params)
     (if (gethash :user-id *session*)
@@ -120,8 +128,8 @@
     (redirect-back-or (format nil "/users/~A" (current-user-id))))
   (redirect "/users/new"))
 
-(defroute "/users/:id" (&key id |page|)
-  (princ |page|)
+@route GET "/users/:id"
+(defun users-show-page  (&key id |page|)
   (setf user (find-dao 'user :id id))
   (if (null user)
       (throw-code 404))
@@ -138,7 +146,8 @@
                              :posts posts
                              :flash (flash) :type "success")))
 
-(defroute "/users/:id/edit" (&key id)
+@route GET "/users/:id/edit"
+(defun users-edit-page  (&key id)
   (logged-in-user)
   (correct-user id)
   (setf current-user (find-dao 'user :id id))
@@ -146,7 +155,8 @@
                        (list :flash (flash) :type "success"
                              :user current-user)))
 
-(defroute ("/users/:id/update" :method :POST) (&key id _parsed)
+@route POST "/users/:id/update"
+(defun users-update (&key id _parsed)
   (logged-in-user)
   (correct-user id)
   (setf params (get-value-from-params "user" _parsed))
@@ -156,7 +166,8 @@
     (redirect (format nil "/users/~A" (current-user-id))))
   (redirect (format nil  "/users/~A/edit" (current-user-id))))
 
-(defroute  ("/users/:id/delete" :method :POST) (&key id)
+@route POST "/users/:id/delete"
+(defun users-delete (&key id)
   (logged-in-user)
   (when (admin-p)
       (handler-case (delete-by-values 'user :id id)
@@ -168,7 +179,8 @@
 ;;
 ;; Micropost
 
-(defroute ("/microposts/create" :method :POST) (&key _parsed)
+@route POST "/microposts/create"
+(defun microposts-create (&key _parsed)
   (logged-in-user)
   (setf params (get-value-from-params "micropost" _parsed))
   (setf post (make-instance 'micropost
@@ -179,7 +191,8 @@
   (flash "Micropost created!")
   (redirect "/home"))
 
-(defroute ("/microposts/:id/delete" :method :POST) (&key id)
+@route POST "/microposts/:id/delete"
+(defun microposts-delete (&key id)
   (logged-in-user)
   (setf post (find-dao 'micropost :id id))
   (when (equal (current-user-id) (object-id (micropost-user post)))
@@ -190,12 +203,14 @@
 ;;
 ;; login, logout
 
-(defroute "/login" ()
+@route GET "/login"
+(defun login-page  ()
   (render-with-current #P"sessions/new.html"
                        (list :flash (flash)
                              :type "danger")))
 
-(defroute ("/login" :method :POST) (&key _parsed)
+@route POST "/login"
+(defun login (&key _parsed)
   (setf params (get-value-from-params "session" _parsed))
   (setf login-user (find-dao 'user
                              :email
@@ -210,7 +225,8 @@
                        (list :flash (flash)
                              :type "danger")))
 
-(defroute ("/logout" :method :POST) ()
+@route POST "/logout"
+(defun logout ()
   (reset-current-user)
   (redirect "/home"))
 
