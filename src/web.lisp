@@ -108,7 +108,10 @@
                            (list :next-page (1+ current-page)
                                  :users users
                                  :flash (flash) :type "success"
-                                 :admin (user-admin (find-dao 'user :id (current-user-id)))))))
+                                 :admin (user-admin
+                                         (find-dao 'user
+                                                   :id
+                                                   (current-user-id)))))))
 
 @route GET "/users/new"
 (defun users-new-page  ()
