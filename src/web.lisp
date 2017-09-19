@@ -187,8 +187,8 @@
   (logged-in-user)
   (setf params (get-value-from-params "micropost" _parsed))
   (setf post (make-instance 'micropost
-                             :content (get-value-from-params "content" params)
-                             :user (find-dao 'user :id (current-user-id))))
+                            :content (get-value-from-params "content" params)
+                            :user (find-dao 'user :id (current-user-id))))
   (handler-case (insert-dao post)
     (error (c) (redirect "/home")))
   (flash "Micropost created!")
