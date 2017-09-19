@@ -69,7 +69,8 @@
 
 (djula::def-filter :md5-hexdigest (it)
   (ironclad:byte-array-to-hex-string
-   (ironclad:digest-sequence :md5 (ironclad:ascii-string-to-byte-array it))))
+   (ironclad:digest-sequence :md5
+                             (ironclad:ascii-string-to-byte-array it))))
 
 (djula::def-filter :time-ago-in-words (it)
   (distance-of-time it))
