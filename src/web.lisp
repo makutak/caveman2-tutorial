@@ -207,7 +207,7 @@
 ;; login, logout
 
 @route GET "/login"
-(defun login-page  ()
+(defun login-page ()
   (render-with-current #P"sessions/new.html"
                        (list :flash (flash)
                              :type "danger")))
