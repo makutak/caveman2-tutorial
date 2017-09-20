@@ -91,7 +91,7 @@
   (render-with-current #P"static_pages/about.html"))
 
 @route GET "/signup"
-(defun sign-up-page  ()
+(defun signup-page  ()
   (redirect "/users/new"))
 
 ;;
