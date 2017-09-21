@@ -15,7 +15,6 @@
            :user-email
            :user-birth-date
            :user-admin
-           :user-info
            :create-user
            :update-user
            :valid-user
@@ -38,10 +37,6 @@
           :accessor user-admin))
   (:metaclass mito:dao-table-class)
   (:unique-keys name email))
-
-(defun user-info (user-instance)
-  (list :user (list :name (user-name user-instance)
-                    :email (make-md5-hexdigest (user-email user-instance)))))
 
 (defun create-user (params)
   (setf new-user
