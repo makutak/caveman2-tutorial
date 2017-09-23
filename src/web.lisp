@@ -98,7 +98,7 @@
 ;; User
 
 @route GET "/users"
-(defun users-index-page  (&key |page|)
+(defun users-index-page (&key |page|)
   (logged-in-user)
   (setf current-page (parse-query (or |page| "1")))
   (setf users (paginate 'user current-page))
@@ -114,7 +114,7 @@
                                                    (current-user-id)))))))
 
 @route GET "/users/new"
-(defun users-new-page  ()
+(defun users-new-page ()
   (flash "Please input infomation.")
   (render-with-current #P"users/new.html"
                        (list :flash (flash)
@@ -132,7 +132,7 @@
   (redirect "/users/new"))
 
 @route GET "/users/:id"
-(defun users-show-page  (&key id |page|)
+(defun users-show-page (&key id |page|)
   (setf user (find-dao 'user :id id))
   (if (null user)
       (throw-code 404))
@@ -150,7 +150,7 @@
                              :flash (flash) :type "success")))
 
 @route GET "/users/:id/edit"
-(defun users-edit-page  (&key id)
+(defun users-edit-page (&key id)
   (logged-in-user)
   (correct-user id)
   (setf current-user (find-dao 'user :id id))
