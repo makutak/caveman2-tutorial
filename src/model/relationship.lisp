@@ -22,3 +22,9 @@
                    :initarg :followed-id
                    :accessor relationship-followed))
   (:metaclass mito:dao-table-class))
+
+(defun follow ())
+
+(defun unfollow ())
+
+(defun following-p ())
