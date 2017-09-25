@@ -15,12 +15,14 @@
 (in-package :caveman2-tutorial.model.relationship)
 
 (defclass relationship ()
-  ((follower-id :col-type :integer
-            :initarg :follower-id
-            :accessor relationship-follower)
-   (followed-id  :col-type :integer
-                   :initarg :followed-id
-                   :accessor relationship-followed))
+  ((follower-id :references (user id)
+                :col-type :integer
+                :initarg :follower-id
+                :accessor relationship-follower-id)
+   (followed-id :references (user id)
+                :col-type :integer
+                :initarg :followed-id
+                :accessor relationship-followed-id))
   (:metaclass mito:dao-table-class))
 
 (defun follow ())
