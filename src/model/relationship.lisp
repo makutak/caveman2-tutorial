@@ -10,8 +10,8 @@
         :local-time)
 
   (:export :relationship
-           :relationship-follower
-           :relationship-followed))
+           :relationship-follower-id
+           :relationship-followed-id))
 (in-package :caveman2-tutorial.model.relationship)
 
 (defclass relationship ()
