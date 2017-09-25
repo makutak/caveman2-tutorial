@@ -11,7 +11,7 @@
         :cl-csv)
 
   (:export :micropost
-           :user-content
+           :micropost-content
            :micropost-user))
 (in-package :caveman2-tutorial.model.micropost)
 
