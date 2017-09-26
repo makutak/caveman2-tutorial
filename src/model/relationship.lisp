@@ -16,11 +16,9 @@
 
 (defclass relationship ()
   ((follower-id :references (user id)
-                :col-type :integer
                 :initarg :follower-id
                 :accessor relationship-follower-id)
    (followed-id :references (user id)
-                :col-type :integer
                 :initarg :followed-id
                 :accessor relationship-followed-id))
   (:metaclass mito:dao-table-class))
