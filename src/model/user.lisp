@@ -47,12 +47,11 @@
                        :birth-date (parse-timestring "1992-03-06")))
   (with-connection (db) (insert-dao new-user)))
 
-(defun update-user (instance params)
-  (setf (slot-value instance 'name) (get-value-from-params "name" params))
-  (setf (slot-value instance 'email) (get-value-from-params "email" params))
-  (setf (password instance) (get-value-from-params "password" params))
-  (with-connection (db) (save-dao instance)))
-
+(defmethod update-user ((this user) params)
+  (setf (slot-value this 'name) (get-value-from-params "name" params))
+  (setf (slot-value this 'email) (get-value-from-params "email" params))
+  (setf (password this) (get-value-from-params "password" params))
+  (with-connection (db) (save-dao this)))
 
 (defmacro valid (key params)
   `(not (= 0 (length (get-value-from-params ,key ,params)))))
