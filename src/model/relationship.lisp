@@ -23,12 +23,21 @@
                 :accessor relationship-followed-id))
   (:metaclass mito:dao-table-class))
 
-(defun follow (this-user other-user)
+(defmethod follow ((this user) other-user)
   (with-connection (db)
     (create-dao 'relationship
-                :follower-id (object-id this-user)
+                :follower-id (object-id this)
                 :followed-id (object-id other-user))))
 
-(defun unfollow ())
+(defmethod unfollow ((this user) other-user)
+  (with-connection (db)
+    (delete-by-values 'relationship
+                      :follower-id (object-id this)
+                      :followed-id (object-id other-user))))
 
-(defun following-p ())
+(defmethod following-p ((this user) other-user)
+  (not (null
+        (with-connection (db)
+          (retrieve-dao 'relationship
+                        :follower-id (object-id this)
+                        :followed-id (object-id other-user))))))
