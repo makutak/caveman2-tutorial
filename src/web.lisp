@@ -179,8 +179,8 @@
       (redirect "/users" ))
   (redirect "/home"))
 
-@route GET "/users/:id/followings"
-(defun users-followings ()
+@route GET "/users/:id/following"
+(defun users-following ()
   (format nil "user following page."))
 
 @route GET "/users/:id/followers"
